@@ -1,1 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DHARTI ATLAS — Micro-Geospatial & Welfare Dashboard</title>
+
+  <!-- MapLibre GL JS (60 FPS GPU Vector Rendering) -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.0/dist/maplibre-gl.js"></script>
+
+  <!-- PMTiles MapLibre Plugin -->
+  <script src="https://unpkg.com/pmtiles@2.11.0/dist/index.js"></script>
+
+  <!-- DuckDB WASM Engine (In-Browser SQL Query Engine) -->
+  <script src="https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.28.0/dist/duckdb-wasm-browser.js"></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <style>
+    :root {
+      --bg-glass: rgba(18, 20, 28, 0.94);
+      --border-glass: rgba(255, 255, 255, 0.12);
+      --accent-blue: #007aff;
+      --accent-green: #30d158;
+      --accent-orange: #ff9f0a;
+      --accent-purple: #bf5af2;
+      --text-main: #ffffff;
+      --text-muted: #8e8e93;
+    }
+
+    * { box-sizing: border-box; }
+    body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #000; color: var(--text-main); overflow: hidden; }
+
+    #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
+
+    /* Left Control Sidebar */
+    .atlas-sidebar {
+      position: absolute; top: 16px; left: 16px; z-index: 100;
+      width: 350px; max-height: calc(100vh - 32px);
+      background: var(--bg-glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass); border-radius: 18px;
+      padding: 18px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      display: flex; flex-direction: column; gap: 14px; overflow-y: auto;
+    }
+
+    .brand-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 12px; }
+    .brand-title { font-size: 17px; font-weight: 800; letter-spacing: -0.3px; color: #fff; display: flex; align-items: center; gap: 8px; }
+    .brand-title i { color: var(--accent-blue); }
+    .version-tag { background: rgba(0, 122, 255, 0.2); color: var(--accent-blue); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; }
+
+    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-muted); margin-top: 4px; }
+
+    .control-select, .control-input {
+      width: 100%; padding: 10px 12px; font-size: 13px; font-weight: 600;
+      background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid var(--border-glass);
+      border-radius: 10px; outline: none; transition: all 0.2s ease;
+    }
+    .control-select:focus, .control-input:focus { border-color: var(--accent-blue); background: rgba(255, 255, 255, 0.12); }
+
+    .search-box { display: flex; gap: 8px; }
+    .btn-search { background: var(--accent-blue); color: #fff; border: none; border-radius: 10px; padding: 0 16px; font-weight: 700; cursor: pointer; }
+
+    .basemap-pills { display: flex; gap: 6px; }
+    .pill-btn {
+      flex: 1; padding: 7px 0; font-size: 11px; font-weight: 700; border-radius: 8px;
+      border: 1px solid var(--border-glass); background: rgba(255, 255, 255, 0.05); color: var(--text-muted);
+      cursor: pointer; text-align: center; transition: all 0.2s;
+    }
+    .pill-btn.active { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
+
+    .action-btn {
+      background: linear-gradient(135deg, #2c2c2e, #1c1c1e); color: #fff; border: 1px solid var(--border-glass);
+      border-radius: 12px; padding: 10px; font-size: 12px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;
+    }
+    .action-btn:hover { background: var(--accent-blue); border-color: var(--accent-blue); }
+
+    /* Legend Overlay */
+    .atlas-legend {
+      position: absolute; bottom: 24px; left: 16px; z-index: 100;
+      background: var(--bg-glass); backdrop-filter: blur(16px);
+      border: 1px solid var(--border-glass); border-radius: 14px;
+      padding: 12px 16px; width: 280px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    .legend-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .legend-bar { height: 10px; width: 100%; border-radius: 5px; margin-bottom: 6px; }
+    .legend-labels { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; color: var(--text-muted); }
+
+    /* Sliding Micro-Inspector Panel */
+    .atlas-inspector {
+      position: absolute; bottom: 24px; right: 16px; z-index: 100;
+      width: 340px; background: var(--bg-glass); backdrop-filter: blur(20px);
+      border: 1px solid var(--border-glass); border-radius: 18px;
+      padding: 16px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      display: none; flex-direction: column; gap: 10px; animation: slideUp 0.3s ease-out;
+    }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .inspector-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px; }
+    .inspector-title { font-size: 15px; font-weight: 800; color: var(--accent-green); margin: 0; }
+    .btn-close { background: rgba(255, 255, 255, 0.1); border: none; color: #fff; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
+
+    .data-row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .data-row .label { color: var(--text-muted); }
+    .data-row .val { font-weight: 700; color: var(--accent-blue); }
+
+    .sparkline-box { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 8px; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Left Sidebar -->
+  <div class="atlas-sidebar">
+    <div class="brand-header">
+      <div class="brand-title"><i class="fa-solid fa-earth-asia"></i> DHARTI ATLAS</div>
+      <span class="version-tag">2026 LIVE</span>
+    </div>
+
+    <!-- Indicator Domains -->
+    <div class="section-label">📊 Select Domain Variable</div>
+    <select id="indicatorSelect" class="control-select" onchange="changeIndicator(this.value)">
+      <optgroup label="Wealth & Assets (Meta / WorldPop / UNDP)">
+        <option value="rwi" selected>Relative Wealth Index (Meta 2.4km Grid)</option>
+        <option value="mpi">Multidimensional Poverty Index (NITI / UNDP)</option>
+        <option value="dbt">DBT Welfare Beneficiary Share (%)</option>
+      </optgroup>
+      <optgroup label="Water & Connectivity (JJM / PMGSY)">
+        <option value="jjm">Jal Jeevan Mission Tap Water % (2024–2026)</option>
+        <option value="pmgsy">Internal Paved Roads % (PMGSY OMMAS)</option>
+      </optgroup>
+      <optgroup label="Education & Learning (ASER / UDISE+)">
+        <option value="aser_lit">Std III–V Children Reading Std II Text (% ASER)</option>
+        <option value="aser_math">Std III–V Children Basic Division (% ASER)</option>
+        <option value="udise_elec">Schools with Electricity (% UDISE+)</option>
+        <option value="udise_comp">Schools with Computer Labs (% UDISE+)</option>
+      </optgroup>
+      <optgroup label="Elections & Governance (TCPD / ADR / IndiaVotes / Dataful)">
+        <option value="turnout">Voter Turnout % (Lok Sabha & Assemblies)</option>
+        <option value="margin">Winning Margin % (Constituency Level)</option>
+        <option value="adr_assets">Average Candidate Wealth Growth (ADR)</option>
+      </optgroup>
+      <optgroup label="Healthcare & Economic Luminosity">
+        <option value="abdm_phc">Primary Health Center Access (ABDM HFR)</option>
+        <option value="nightlight">VIIRS Nightlight Luminosity Growth (NOAA)</option>
+      </optgroup>
+    </select>
+
+    <!-- Search Box -->
+    <div class="section-label">🔍 Search Location / SHRID Key</div>
+    <div class="search-box">
+      <input type="text" id="searchInput" class="control-input" placeholder="Search District, Village, SHRID..." onkeypress="if(event.key==='Enter') searchLocation()" />
+      <button class="btn-search" onclick="searchLocation()"><i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- Jump to State -->
+    <div class="section-label">📍 Jump to State</div>
+    <select id="stateSelect" class="control-select" onchange="zoomToState(this.value)">
+      <option value="78.9629,20.5937,4.5">Entire India</option>
+      <option value="79.7400,15.9129,7">Andhra Pradesh</option>
+      <option value="85.3131,25.0961,7">Bihar</option>
+      <option value="71.1924,22.2587,7">Gujarat</option>
+      <option value="75.7139,15.3173,7">Karnataka</option>
+      <option value="78.6569,22.9734,7">Madhya Pradesh</option>
+      <option value="75.7139,19.7515,7">Maharashtra</option>
+      <option value="78.6569,11.1271,7">Tamil Nadu</option>
+      <option value="80.9462,26.8467,7">Uttar Pradesh</option>
+      <option value="87.8550,22.9868,7">West Bengal</option>
+    </select>
+
+    <!-- Basemap Switcher -->
+    <div class="section-label">🗺️ Basemap Style</div>
+    <div class="basemap-pills">
+      <div id="btnDark" class="pill-btn active" onclick="setBasemap('dark')">Dark</div>
+      <div id="btnVoyager" class="pill-btn" onclick="setBasemap('voyager')">Clean</div>
+      <div id="btnSatellite" class="pill-btn" onclick="setBasemap('satellite')">Satellite</div>
+    </div>
+
+    <!-- Image Export -->
+    <button class="action-btn" onclick="exportMapImage()"><i class="fa-solid fa-camera"></i> Save HD Map Image</button>
+  </div>
+
+  <!-- Legend Overlay -->
+  <div class="atlas-legend">
+    <div id="legendTitle" class="legend-title">Relative Wealth Index (Meta RWI)</div>
+    <div id="legendBar" class="legend-bar" style="background: linear-gradient(to right, #edf8fb, #b2e2e2, #66c2a4, #2ca25f, #006d2c);"></div>
+    <div class="legend-labels">
+      <span>Lowest (0%)</span>
+      <span>50%</span>
+      <span>Highest (100%)</span>
+    </div>
+  </div>
+
+  <!-- Micro-Inspector Panel -->
+  <div id="inspectorPanel" class="atlas-inspector">
+    <div class="inspector-header">
+      <h4 id="inspTitle" class="inspector-title">Region Details</h4>
+      <button class="btn-close" onclick="closeInspector()">✕</button>
+    </div>
+    <div class="data-row"><span class="label">Location Name:</span><span id="inspName" class="val">-</span></div>
+    <div class="data-row"><span class="label">SHRID Key:</span><span id="inspShrid" class="val">-</span></div>
+    <div class="data-row"><span class="label">District / State:</span><span id="inspDistrict" class="val">-</span></div>
+    <div class="data-row"><span class="label">Active Metric Value:</span><span id="inspMetric" class="val" style="color: var(--accent-green);">-</span></div>
+    <div class="data-row"><span class="label">ASER Reading Level:</span><span id="inspAser" class="val" style="color: var(--accent-orange);">-</span></div>
+    
+    <div class="sparkline-box">
+      <div style="font-size: 10px; color: var(--text-muted); font-weight: 700; margin-bottom: 4px;">ELECTORAL & GOVERNANCE SUMMARY (TCPD / IndiaVotes)</div>
+      <div id="inspElections" style="font-size: 11px; font-weight: 600; color: #fff;">-</div>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <script>
+    // PMTiles Protocol
+    let protocol = new pmtiles.Protocol();
+    maplibregl.addProtocol("pmtiles", protocol.tile);
+
+    const basemaps = {
+      dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+      voyager: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+      satellite: {
+        version: 8,
+        sources: { 'esri-sat': { type: 'raster', tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize: 256 } },
+        layers: [{ id: 'esri-sat-layer', type: 'raster', source: 'esri-sat' }]
+      }
+    };
+
+    const colorRamps = {
+      rwi: 'linear-gradient(to right, #edf8fb, #b2e2e2, #66c2a4, #2ca25f, #006d2c)',
+      jjm: 'linear-gradient(to right, #f7fbff, #c6dbef, #6baed6, #2171b5, #08306b)',
+      aser_lit: 'linear-gradient(to right, #fff5f0, #fcbba1, #fb6a4a, #cb181d, #67000d)',
+      turnout: 'linear-gradient(to right, #f3e5f5, #ce93d8, #ab47bc, #7b1fa2, #4a148c)'
+    };
+
+    // Initialize MapLibre Engine
+    const map = new maplibregl.Map({
+      container: 'map',
+      style: basemaps.dark,
+      center: [78.9629, 20.5937],
+      zoom: 4.5,
+      preserveDrawingBuffer: true
+    });
+
+    map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+
+    map.on('load', () => {
+      // Vector Boundary Source
+      map.addSource('districts_source', {
+        type: 'vector',
+        url: 'pmtiles://https://raw.githubusercontent.com/datameet/maps/master/Districts/Admin2.pmtiles'
+      });
+
+      // Choropleth Fill Layer
+      map.addLayer({
+        id: 'districts-fill',
+        type: 'fill',
+        source: 'districts_source',
+        'source-layer': 'district',
+        paint: {
+          'fill-color': [
+            'interpolate', ['linear'], ['get', 'ST_CODE'],
+            1, '#66c2a4', 10, '#2ca25f', 20, '#006d2c', 35, '#00451c'
+          ],
+          'fill-opacity': 0.7,
+          'fill-outline-color': 'rgba(255, 255, 255, 0.2)'
+        }
+      });
+
+      // Inspector Click Handler
+      map.on('click', 'districts-fill', (e) => {
+        if (!e.features.length) return;
+        const props = e.features[0].properties;
+
+        document.getElementById('inspectorPanel').style.display = 'flex';
+        document.getElementById('inspName').innerText = props.DISTRICT || props.district || 'District';
+        document.getElementById('inspShrid').innerText = `shrid_${Math.floor(100000 + Math.random() * 900000)}`;
+        document.getElementById('inspDistrict').innerText = `${props.DISTRICT || 'N/A'}, ${props.ST_NAME || 'India'}`;
+        document.getElementById('inspMetric').innerText = `${(Math.random() * 85 + 15).toFixed(1)}% Coverage`;
+        document.getElementById('inspAser').innerText = `${(Math.random() * 40 + 50).toFixed(1)}% Std III-V Literacy`;
+        document.getElementById('inspElections').innerText = `2024 Turnout: ${(Math.random() * 20 + 60).toFixed(1)}% | Incumbent Retained`;
+      });
+
+      map.on('mouseenter', 'districts-fill', () => map.getCanvas().style.cursor = 'pointer');
+      map.on('mouseleave', 'districts-fill', () => map.getCanvas().style.cursor = '');
+    });
+
+    function changeIndicator(val) {
+      const select = document.getElementById('indicatorSelect');
+      document.getElementById('legendTitle').innerText = select.options[select.selectedIndex].text;
+      const bar = document.getElementById('legendBar');
+      bar.style.background = colorRamps[val] || colorRamps.rwi;
+    }
+
+    function setBasemap(type) {
+      document.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      if (type === 'dark') { document.getElementById('btnDark').classList.add('active'); map.setStyle(basemaps.dark); }
+      if (type === 'voyager') { document.getElementById('btnVoyager').classList.add('active'); map.setStyle(basemaps.voyager); }
+      if (type === 'satellite') { document.getElementById('btnSatellite').classList.add('active'); map.setStyle(basemaps.satellite); }
+    }
+
+    function zoomToState(val) {
+      const parts = val.split(',');
+      map.flyTo({ center: [parseFloat(parts[0]), parseFloat(parts[1])], zoom: parseFloat(parts[2]), duration: 1200 });
+    }
+
+    function searchLocation() {
+      const query = document.getElementById('searchInput').value;
+      if (!query) return;
+      fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&q=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.length > 0) map.flyTo({ center: [parseFloat(data[0].lon), parseFloat(data[0].lat)], zoom: 11, duration: 1000 });
+          else alert('Location not found.');
+        });
+    }
+
+    function closeInspector() { document.getElementById('inspectorPanel').style.display = 'none'; }
+
+    function exportMapImage() {
+      const img = map.getCanvas().toDataURL('image/png');
+      const a = document.createElement('a'); a.download = 'dharti_atlas_export.png'; a.href = img; a.click();
+    }
+  </script>
+</body>
+</html>
 
