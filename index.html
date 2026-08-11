@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>INDIA GEOSPATIAL — Spatial Analytics Dashboard</title>
+  <title>INDIA GEOSPATIAL</title>
 
-  <!-- Leaflet Map Engine -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/topojson-client@3"></script>
+  <!-- MapLibre GL JS (WebGL Vector Rendering Engine) -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.0/dist/maplibre-gl.js"></script>
 
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -23,15 +22,15 @@
     }
 
     * { box-sizing: border-box; }
-    body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow: hidden; background: #e0e0e0; }
+    body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; background: #e0e0e0; }
 
     #app-container { display: flex; width: 100vw; height: 100vh; position: relative; }
 
-    /* Left Sidebar Panel */
+    /* Left Sidebar */
     #sidebar {
-      width: 320px; height: 100%; background: var(--sidebar-bg);
+      width: 310px; height: 100%; background: var(--sidebar-bg);
       border-right: 1px solid var(--border-color); display: flex; flex-direction: column;
-      z-index: 1000; flex-shrink: 0;
+      z-index: 10; flex-shrink: 0;
     }
 
     .brand-header {
@@ -40,14 +39,13 @@
     }
 
     .brand-title {
-      font-size: 22px; font-weight: 900; letter-spacing: -0.6px; color: var(--text-dark);
+      font-size: 20px; font-weight: 900; letter-spacing: -0.5px; color: var(--text-dark);
       display: flex; align-items: center; gap: 10px;
     }
-    .brand-title i { color: var(--brand-blue); font-size: 22px; }
+    .brand-title i { color: var(--brand-blue); font-size: 20px; }
 
-    /* Accordion Menu Container */
+    /* Accordion Menu */
     .accordion-menu { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
-
     .accordion-item { border-bottom: 1px solid var(--border-color); }
 
     .accordion-header {
@@ -65,61 +63,38 @@
     .sub-item {
       padding: 8px 18px 8px 24px; font-size: 12px; font-weight: 600; color: #333;
       cursor: pointer; display: flex; align-items: center; justify-content: space-between;
-      transition: background 0.2s; text-decoration: none;
+      transition: background 0.2s;
     }
     .sub-item:hover { background: #fff; color: var(--brand-blue); }
     .sub-item.active { background: #fff; color: var(--brand-blue); font-weight: 800; border-left: 4px solid var(--brand-blue); }
-    .sub-item i { font-size: 10px; color: #999; }
 
-    .sidebar-footer {
-      padding: 12px 18px; background: var(--sidebar-bg); border-top: 1px solid var(--border-color);
-      display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: var(--brand-blue);
-    }
-    .footer-btn { display: flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; color: var(--brand-blue); }
-
-    .copyright-tag { padding: 8px 18px; background: var(--sidebar-bg); font-size: 10px; color: #777; text-align: center; border-top: 1px solid rgba(0,0,0,0.05); }
-
-    /* Map Canvas Area */
+    /* Map Area */
     #map-container { flex: 1; height: 100%; position: relative; }
-    #map { width: 100%; height: 100%; background: #e0ecef; }
+    #map { width: 100%; height: 100%; }
 
-    /* Top Floating Search Bar */
+    /* Search Input */
     .floating-search {
-      position: absolute; top: 14px; left: 14px; z-index: 1000;
+      position: absolute; top: 14px; left: 14px; z-index: 10;
       background: #fff; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
       display: flex; align-items: center; padding: 6px 12px; width: 320px;
     }
     .floating-search i { color: #777; margin-right: 8px; font-size: 13px; }
-    .floating-search input {
-      border: none; outline: none; width: 100%; font-size: 13px; font-weight: 600; color: #333;
-    }
+    .floating-search input { border: none; outline: none; width: 100%; font-size: 13px; font-weight: 600; color: #333; }
 
-    /* Bottom Right Quantile Legend */
+    /* Legend Box */
     .shrug-legend {
-      position: absolute; bottom: 20px; right: 20px; z-index: 1000;
-      background: #fff; padding: 12px 16px; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      position: absolute; bottom: 20px; right: 20px; z-index: 10;
+      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(4px);
+      padding: 12px 16px; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
       width: 280px; font-size: 10px; font-weight: 700; color: #333;
     }
-    .legend-title-box { font-size: 11px; font-weight: 800; color: #1c1c1e; margin-bottom: 4px; }
-    .legend-bar {
-      height: 14px; width: 100%; border-radius: 2px; margin: 6px 0;
-      transition: background 0.3s;
-    }
+    .legend-bar { height: 14px; width: 100%; border-radius: 2px; margin: 6px 0; }
     .legend-ticks { display: flex; justify-content: space-between; font-size: 10px; color: #444; font-weight: 600; }
-
-    /* Popup Card Styling */
-    .leaflet-popup-content-wrapper { border-radius: 6px; padding: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-    .leaflet-popup-content { margin: 0; min-width: 220px; }
-    .popup-card { padding: 12px 16px; font-family: -apple-system, sans-serif; background: #f8f9fa; border-radius: 6px; }
-    .popup-card h3 { margin: 0 0 8px 0; font-size: 20px; font-weight: 800; color: #1c1c1e; }
-    .popup-card p { margin: 4px 0; font-size: 12px; color: #333; line-height: 1.4; }
-    .popup-card .shrug-id { font-size: 11px; font-weight: 700; color: #666; margin-top: 8px; }
   </style>
 </head>
 <body>
 
 <div id="app-container">
-  <!-- Left Sidebar Panel -->
   <div id="sidebar">
     <div class="brand-header">
       <div class="brand-title">
@@ -128,350 +103,145 @@
       </div>
     </div>
 
-    <!-- Accordion Category List -->
     <div class="accordion-menu">
-
-      <!-- 1. Consumption and Wealth -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          Consumption and Wealth <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('rwi', 'Relative wealth index (Meta 2024–2026)', this)">Relative wealth index (Meta 2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('mpi', 'Multidimensional Poverty Index (NITI 2026)', this)">Multidimensional Poverty Index (NITI 2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('cons_exp', 'Per capita consumption (NSSO 2026)', this)">Per capita consumption (NSSO 2026) <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 2. Health -->
       <div class="accordion-item active">
         <button class="accordion-header" onclick="toggleAccordion(this)">
-          Health <i class="fa-solid fa-chevron-down"></i>
+          Administrative Boundaries <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content" style="display:flex;">
-          <div class="sub-item active" onclick="activateVariable('phc', 'Primary health centre (2024–2026)', this)">Primary health centre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('chc', 'Community health centre (2024–2026)', this)">Community health centre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('hospital', 'Allopathic hospital (2024–2026)', this)">Allopathic hospital (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('subcentre', 'Primary health subcentre (2024–2026)', this)">Primary health subcentre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('immunization', '0-3 Immunization % (NFHS)', this)">0-3 Immunization % (NFHS) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('stunting', 'Child stunting & wasting risk % (WHO)', this)">Child stunting & wasting risk % (WHO) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item active" onclick="switchTheme('districts', 'District Boundaries (DataMeet)', this)">District Boundaries</div>
+          <div class="sub-item" onclick="switchTheme('states', 'State Boundaries', this)">State Boundaries</div>
         </div>
       </div>
-
-      <!-- 3. Education -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          Education <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('aser_read', 'ASER Std III-V Literacy (2024–2026)', this)">ASER Std III-V Literacy (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('aser_math', 'ASER Basic Math/Division % (2024–2026)', this)">ASER Basic Math/Division % (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('udise_elec', 'School electricity % (UDISE+ 2026)', this)">School electricity % (UDISE+ 2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('udise_comp', 'School computer labs % (UDISE+ 2026)', this)">School computer labs % (UDISE+ 2026) <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 4. Public Services -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          Public Services <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('piped_water', 'Piped tap water % (JJM 2024–2026)', this)">Piped tap water % (JJM 2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('nrega_density', 'NREGA worker & asset density (2026)', this)">NREGA worker & asset density (2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('electricity_cov', 'Household power hours (RDSS 2026)', this)">Household power hours (RDSS 2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('paved_road', 'Internal paved road access (2026)', this)">Internal paved road access (2026) <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 5. Demographics & Social Groups -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          Demographics & Social Groups <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('sc_dalit_pop', 'SC / Dalit Population % (2024–2026)', this)">SC / Dalit Population % (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('st_tribal_pop', 'ST / Tribal Population % (2024–2026)', this)">ST / Tribal Population % (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('obc_pop', 'OBC Population Estimate % (NSSO/PLFS)', this)">OBC Population Estimate % (NSSO/PLFS) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('muslim_pop', 'Muslim Population Share % (Pew 2026)', this)">Muslim Population Share % (Pew 2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('christian_pop', 'Christian Population Share % (Pew 2026)', this)">Christian Population Share % (Pew 2026) <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 6. Elections & Voting Shifts -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          Elections & Voting Shifts <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('area_shift', 'Urban vs Rural Turnout & Margins', this)">Urban vs Rural Turnout & Margins <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('gender_shift', 'Female Voter Turnout Surge & Gap', this)">Female Voter Turnout Surge & Gap <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('caste_shift', 'Caste & Demographic Voting Blocs', this)">Caste & Demographic Voting Blocs <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 7. SDGs & Aspirational Progress -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          SDGs & Aspirational Progress <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('sdg_index', 'NITI Aayog SDG Index Score (2026)', this)">NITI Aayog SDG Index Score (2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('adp_progress', 'Aspirational Districts Progress (June 2026)', this)">Aspirational Districts Progress (June 2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('abp_progress', 'Aspirational Blocks Delta Rank (June 2026)', this)">Aspirational Blocks Delta Rank (June 2026) <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
     </div>
-
-    <!-- Sidebar Footer -->
-    <div class="sidebar-footer">
-      <a href="#" class="footer-btn"><i class="fa-solid fa-layer-group"></i> Data Stories</a>
-      <a href="#" class="footer-btn"><i class="fa-solid fa-compass"></i> Atlas Tour</a>
-      <a href="#" class="footer-btn" onclick="exportMapImage()"><i class="fa-solid fa-image"></i> Save Image</a>
-    </div>
-    <div class="copyright-tag">© 2026 INDIA GEOSPATIAL</div>
   </div>
 
-  <!-- Map Canvas -->
   <div id="map-container">
     <div class="floating-search">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="searchInput" value="Gujarat, India" onkeypress="if(event.key==='Enter') searchLocation()" />
+      <input type="text" id="searchInput" placeholder="Search District or State..." onkeypress="if(event.key==='Enter') searchLocation()" />
     </div>
 
     <div id="map"></div>
 
-    <!-- Dynamic Quantile Legend -->
     <div class="shrug-legend">
-      <div id="legendTitleBox" class="legend-title-box">Primary health centre (2024–2026)</div>
-      <div id="legendBar" class="legend-bar"></div>
-      <div id="legendTicks" class="legend-ticks"></div>
+      <div id="legendTitleBox" style="font-size:11px; font-weight:800; margin-bottom:4px;">District Boundaries (DataMeet)</div>
+      <div class="legend-bar" style="background: linear-gradient(to right, #c57071, #d49893, #e2cfc4, #a1c1be, #5a8a92, #386670);"></div>
+      <div class="legend-ticks">
+        <span>Region Units</span>
+        <span>Data Boundaries</span>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-  // Robust Master Config Generator for ALL Indicators
-  const VAR_CONFIGS = {
-    phc: {
-      label: "Primary health centre (2024–2026)",
-      unit: "%",
-      ticks: ["0", "6", "12", "18", "24", "30", "36+ %"],
-      gradient: "linear-gradient(to right, #c57071, #d49893, #e2cfc4, #a1c1be, #5a8a92, #386670)",
-      colors: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670']
-    },
-    piped_water: {
-      label: "Piped tap water % (JJM 2024–2026)",
-      unit: "%",
-      ticks: ["2", "14", "26", "38", "50", "62", "74+ %"],
-      gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494, #1a2b57)",
-      colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494', '#1a2b57']
-    },
-    rwi: {
-      label: "Relative wealth index (Meta 2024–2026)",
-      unit: "Index",
-      ticks: ["-1.0", "-0.5", "0.0", "+0.5", "+1.0", "+1.5"],
-      gradient: "linear-gradient(to right, #edf8fb, #b2e2e2, #66c2a4, #2ca25f, #006d2c)",
-      colors: ['#edf8fb', '#b2e2e2', '#66c2a4', '#2ca25f', '#006d2c']
-    },
-    aser_read: {
-      label: "ASER Std III-V Literacy (2024–2026)",
-      unit: "%",
-      ticks: ["0", "20", "40", "60", "80", "100 %"],
-      gradient: "linear-gradient(to right, #fff5f0, #fcbba1, #fb6a4a, #cb181d, #67000d)",
-      colors: ['#fff5f0', '#fcbba1', '#fb6a4a', '#cb181d', '#67000d']
-    },
-    gender_shift: {
-      label: "Female Voter Turnout Surge & Gap",
-      unit: "%",
-      ticks: ["40", "50", "60", "70", "80", "90+ %"],
-      gradient: "linear-gradient(to right, #f3e5f5, #ce93d8, #ab47bc, #8e24aa, #4a148c)",
-      colors: ['#f3e5f5', '#ce93d8', '#ab47bc', '#8e24aa', '#4a148c']
-    },
-    sdg_index: {
-      label: "NITI Aayog SDG Index Score (2026)",
-      unit: "Score",
-      ticks: ["0", "20", "40", "60", "80", "100 Score"],
-      gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494, #1a2b57)",
-      colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494', '#1a2b57']
-    }
-  };
-
-  // Helper function to guarantee NO indicator ever crashes
-  function getVarConfig(key, labelText) {
-    if (VAR_CONFIGS[key]) return VAR_CONFIGS[key];
-    
-    // Dynamic Fallback Generator for any missing key
-    return {
-      label: labelText || key.toUpperCase(),
-      unit: "%",
-      ticks: ["0", "15", "30", "45", "60", "75", "90+ %"],
-      gradient: "linear-gradient(to right, #c57071, #d49893, #e2cfc4, #a1c1be, #5a8a92, #386670)",
-      colors: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670']
-    };
-  }
-
-  let currentVarKey = 'phc';
-  let currentVarLabel = 'Primary health centre (2024–2026)';
-
-  // Initialize Map Engine
-  var map = L.map('map', { zoomControl: false }).setView([22.2587, 71.1924], 7);
-  L.control.zoom({ position: 'topright' }).addTo(map);
-
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19, attribution: '&copy; Mapbox &copy; OpenStreetMap'
-  }).addTo(map);
-
-  var subdistrictGroup = L.layerGroup().addTo(map);
-  var activeHighlightLayer = null;
-  var activeMarker = null;
-
-  var bluePinIcon = L.divIcon({
-    className: 'custom-pin',
-    html: `<svg width="28" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 0C5.37 0 0 5.37 0 12C0 21 12 36 12 36C12 36 24 21 24 12C24 5.37 18.63 0 12 0Z" fill="#386670" stroke="#FFFFFF" stroke-width="2"/>
-            <circle cx="12" cy="12" r="4" fill="#FFFFFF"/>
-           </svg>`,
-    iconSize: [28, 36],
-    iconAnchor: [14, 36],
-    popupAnchor: [0, -32]
+  // Initialize MapLibre WebGL Engine
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+    center: [78.9629, 20.5937],
+    zoom: 4.5
   });
 
-  // Reliable Multi-Source GeoJSON Boundaries
-  var subDistUrl = 'https://raw.githubusercontent.com/datameet/maps/master/Subdistricts/Admin2.topo.json';
-  var geoJsonCache = null;
+  map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-  fetch(subDistUrl)
-    .then(res => res.json())
-    .then(topoData => {
-      var objName = Object.keys(topoData.objects)[0];
-      geoJsonCache = topojson.feature(topoData, topoData.objects[objName]);
-      renderMapLayer();
-    })
-    .catch(err => {
-      console.warn("Fallback to Districts topology...");
-      fetch('https://raw.githubusercontent.com/datameet/maps/master/Districts/Admin2.topo.json')
-        .then(r => r.json())
-        .then(tData => {
-          var oName = Object.keys(tData.objects)[0];
-          geoJsonCache = topojson.feature(tData, tData.objects[oName]);
-          renderMapLayer();
+  map.on('load', () => {
+    // Fetch Real District Polygons (GeoJSON Payload)
+    fetch('https://raw.githubusercontent.com/datameet/maps/master/Districts/Admin2.geojson')
+      .then(res => res.json())
+      .then(geoJsonData => {
+        
+        map.addSource('districts_data', {
+          type: 'geojson',
+          data: geoJsonData
         });
-    });
 
-  function renderMapLayer() {
-    if (!geoJsonCache) return;
-    subdistrictGroup.clearLayers();
-
-    const config = getVarConfig(currentVarKey, currentVarLabel);
-
-    var geoLayer = L.geoJSON(geoJsonCache, {
-      style: function(feature) {
-        var val = Math.floor(Math.random() * config.colors.length);
-        return {
-          fillColor: config.colors[val],
-          fillOpacity: 0.75,
-          color: '#ffffff',
-          weight: 0.7
-        };
-      },
-      onEachFeature: function(feature, layer) {
-        layer.on({
-          click: function(e) {
-            L.DomEvent.stopPropagation(e);
-            selectRegion(layer, feature.properties, e.latlng);
+        // Real Polygon Fill Layer using WebGL Shading
+        map.addLayer({
+          id: 'districts-fill',
+          type: 'fill',
+          source: 'districts_data',
+          paint: {
+            'fill-color': [
+              'match',
+              ['%', ['coalesce', ['get', 'dt_code'], 1], 5],
+              0, '#c57071',
+              1, '#d49893',
+              2, '#e2cfc4',
+              3, '#a1c1be',
+              4, '#5a8a92',
+              '#386670'
+            ],
+            'fill-opacity': 0.65
           }
         });
-      }
-    }).addTo(subdistrictGroup);
 
-    // Auto-select initial region
-    geoLayer.eachLayer(function(l) {
-      if (l.feature.properties && (l.feature.properties.SUB_DIST === 'Valsad' || l.feature.properties.DISTRICT === 'Valsad')) {
-        selectRegion(l, l.feature.properties, l.getBounds().getCenter());
-      }
-    });
+        // Crisp Boundary Borders
+        map.addLayer({
+          id: 'districts-border',
+          type: 'line',
+          source: 'districts_data',
+          paint: {
+            'line-color': '#ffffff',
+            'line-width': 0.8
+          }
+        });
 
-    updateLegendUI(config);
-  }
+        // Real Data Popup Card on Click
+        map.on('click', 'districts-fill', (e) => {
+          const props = e.features[0].properties;
+          const distName = props.district || props.DISTRICT || props.dtname || "District";
+          const stateName = props.stname || props.ST_NAME || "India";
+          const dtCode = props.dt_code || props.censuscode || "N/A";
 
-  function updateLegendUI(config) {
-    document.getElementById('legendTitleBox').innerText = config.label;
-    document.getElementById('legendBar').style.background = config.gradient;
-    
-    const ticksContainer = document.getElementById('legendTicks');
-    ticksContainer.innerHTML = config.ticks.map(t => `<span>${t}</span>`).join('');
-  }
+          new maplibregl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(`
+              <div style="padding:10px; font-family:-apple-system,sans-serif;">
+                <h3 style="margin:0 0 6px 0; font-size:18px; font-weight:800; color:#1c1c1e;">${distName}</h3>
+                <p style="margin:2px 0; font-size:12px; color:#444;"><b>State:</b> ${stateName}</p>
+                <p style="margin:2px 0; font-size:12px; color:#444;"><b>District Code:</b> ${dtCode}</p>
+              </div>
+            `)
+            .addTo(map);
+        });
 
-  function selectRegion(layer, props, latlng) {
-    if (activeHighlightLayer) map.removeLayer(activeHighlightLayer);
-    if (activeMarker) map.removeLayer(activeMarker);
-
-    var name = props.SUB_DIST || props.DISTRICT || "Valsad";
-    const config = getVarConfig(currentVarKey, currentVarLabel);
-
-    activeHighlightLayer = L.geoJSON(layer.toGeoJSON(), {
-      style: { color: '#000000', weight: 2.5, fillOpacity: 0.85, fillColor: config.colors[config.colors.length - 1] }
-    }).addTo(map);
-
-    var clickPos = latlng || layer.getBounds().getCenter();
-    activeMarker = L.marker(clickPos, { icon: bluePinIcon }).addTo(map);
-
-    var popupContent = `
-      <div class="popup-card">
-        <h3>${name}</h3>
-        <p><b>${config.label}:</b> ${(Math.random() * 25 + 10).toFixed(1)} ${config.unit}</p>
-        <p><b>Largest non-farm sector:</b> Miscellaneous manufacturing</p>
-        <div class="shrug-id">SHRUG ID: 491</div>
-      </div>
-    `;
-
-    L.popup({ closeButton: true })
-      .setLatLng(clickPos)
-      .setContent(popupContent)
-      .openOn(map);
-  }
-
-  function activateVariable(key, labelText, el) {
-    document.querySelectorAll('.sub-item').forEach(i => i.classList.remove('active'));
-    if (el) el.classList.add('active');
-    
-    currentVarKey = key;
-    currentVarLabel = labelText;
-    renderMapLayer();
-  }
+        map.on('mouseenter', 'districts-fill', () => map.getCanvas().style.cursor = 'pointer');
+        map.on('mouseleave', 'districts-fill', () => map.getCanvas().style.cursor = '');
+      })
+      .catch(err => console.error("Data load error:", err));
+  });
 
   function toggleAccordion(btn) {
-    var item = btn.parentElement;
-    var isActive = item.classList.contains('active');
-
+    const item = btn.parentElement;
+    const isActive = item.classList.contains('active');
     document.querySelectorAll('.accordion-item').forEach(el => {
       el.classList.remove('active');
       el.querySelector('.accordion-content').style.display = 'none';
     });
-
     if (!isActive) {
       item.classList.add('active');
       item.querySelector('.accordion-content').style.display = 'flex';
     }
   }
 
-  function searchLocation() {
-    var query = document.getElementById('searchInput').value;
-    if (!query) return;
+  function switchTheme(key, label, el) {
+    document.querySelectorAll('.sub-item').forEach(i => i.classList.remove('active'));
+    if (el) el.classList.add('active');
+    document.getElementById('legendTitleBox').innerText = label;
+  }
 
+  function searchLocation() {
+    const query = document.getElementById('searchInput').value;
+    if (!query) return;
     fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&q=${encodeURIComponent(query)}`)
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
-          map.flyTo([parseFloat(data[0].lat), parseFloat(data[0].lon)], 8, { duration: 0.8 });
+          map.flyTo({ center: [parseFloat(data[0].lon), parseFloat(data[0].lat)], zoom: 8, duration: 1000 });
         }
       });
-  }
-
-  function exportMapImage() {
-    alert("Map image snapshot saved.");
   }
 </script>
 </body>
