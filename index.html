@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>SHRUG Atlas — Development Data Lab (DHARTI Engine)</title>
+  <title>INDIA GEOSPATIAL — Spatial Analytics Dashboard</title>
 
   <!-- Leaflet Map Engine -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -15,11 +15,11 @@
 
   <style>
     :root {
-      --shrug-blue: #0080a5;
-      --shrug-sidebar-bg: #e5f1f5;
-      --shrug-hover: #d2e6ed;
-      --shrug-text: #1e3a47;
-      --shrug-border: #c4e0e8;
+      --brand-blue: #0080a5;
+      --sidebar-bg: #e5f1f5;
+      --hover-bg: #d2e6ed;
+      --text-dark: #1e3a47;
+      --border-color: #c4e0e8;
     }
 
     * { box-sizing: border-box; }
@@ -27,61 +27,57 @@
 
     #app-container { display: flex; width: 100vw; height: 100vh; position: relative; }
 
-    /* Left Sidebar Panel (Exact DDL SHRUG Layout) */
+    /* Left Sidebar Panel */
     #sidebar {
-      width: 310px; height: 100%; background: var(--shrug-sidebar-bg);
-      border-right: 1px solid var(--shrug-border); display: flex; flex-direction: column;
+      width: 320px; height: 100%; background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color); display: flex; flex-direction: column;
       z-index: 1000; flex-shrink: 0;
     }
 
     .brand-header {
-      padding: 14px 16px; background: #fff; border-bottom: 1px solid var(--shrug-border);
-      display: flex; flex-direction: column; gap: 6px;
+      padding: 18px 20px; background: #fff; border-bottom: 1px solid var(--border-color);
+      display: flex; align-items: center; justify-content: space-between;
     }
 
-    .brand-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--shrug-text); }
-    .brand-logo i { font-size: 22px; color: var(--shrug-blue); }
-    .brand-logo span { font-size: 19px; font-weight: 800; letter-spacing: -0.5px; }
-
-    .brand-nav { display: flex; gap: 14px; font-size: 13px; font-weight: 600; color: var(--shrug-blue); margin-top: 4px; }
-    .brand-nav a { text-decoration: none; color: var(--shrug-blue); transition: opacity 0.2s; }
-    .brand-nav a:hover { opacity: 0.7; }
-
-    .title-banner { padding: 14px 16px; font-size: 26px; font-weight: 800; color: var(--shrug-text); }
+    .brand-title {
+      font-size: 22px; font-weight: 900; letter-spacing: -0.6px; color: var(--text-dark);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .brand-title i { color: var(--brand-blue); font-size: 22px; }
 
     /* Accordion Menu Container */
     .accordion-menu { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
 
-    .accordion-item { border-bottom: 1px solid var(--shrug-border); }
+    .accordion-item { border-bottom: 1px solid var(--border-color); }
 
     .accordion-header {
-      width: 100%; padding: 12px 16px; background: transparent; border: none;
+      width: 100%; padding: 13px 18px; background: transparent; border: none;
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 14px; font-weight: 700; color: var(--shrug-text); cursor: pointer;
+      font-size: 14px; font-weight: 700; color: var(--text-dark); cursor: pointer;
       text-align: left; transition: background 0.2s;
     }
-    .accordion-header:hover { background: var(--shrug-hover); }
+    .accordion-header:hover { background: var(--hover-bg); }
 
-    .accordion-content { display: none; background: rgba(255, 255, 255, 0.6); flex-direction: column; }
+    .accordion-content { display: none; background: rgba(255, 255, 255, 0.65); flex-direction: column; }
     .accordion-item.active .accordion-content { display: flex; }
-    .accordion-item.active .accordion-header { color: var(--shrug-blue); }
+    .accordion-item.active .accordion-header { color: var(--brand-blue); background: rgba(255, 255, 255, 0.4); }
 
     .sub-item {
-      padding: 7px 16px 7px 20px; font-size: 12px; font-weight: 600; color: #444;
+      padding: 8px 18px 8px 24px; font-size: 12px; font-weight: 600; color: #333;
       cursor: pointer; display: flex; align-items: center; justify-content: space-between;
       transition: background 0.2s; text-decoration: none;
     }
-    .sub-item:hover { background: #fff; color: var(--shrug-blue); }
-    .sub-item.active { background: #fff; color: var(--shrug-blue); font-weight: 800; }
+    .sub-item:hover { background: #fff; color: var(--brand-blue); }
+    .sub-item.active { background: #fff; color: var(--brand-blue); font-weight: 800; border-left: 4px solid var(--brand-blue); }
     .sub-item i { font-size: 10px; color: #999; }
 
     .sidebar-footer {
-      padding: 12px 16px; background: var(--shrug-sidebar-bg); border-top: 1px solid var(--shrug-border);
-      display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: var(--shrug-blue);
+      padding: 12px 18px; background: var(--sidebar-bg); border-top: 1px solid var(--border-color);
+      display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: var(--brand-blue);
     }
-    .footer-btn { display: flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; color: var(--shrug-blue); }
+    .footer-btn { display: flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; color: var(--brand-blue); }
 
-    .copyright-tag { padding: 8px 16px; background: var(--shrug-sidebar-bg); font-size: 10px; color: #777; text-align: center; }
+    .copyright-tag { padding: 8px 18px; background: var(--sidebar-bg); font-size: 10px; color: #777; text-align: center; border-top: 1px solid rgba(0,0,0,0.05); }
 
     /* Map Canvas Area */
     #map-container { flex: 1; height: 100%; position: relative; }
@@ -89,8 +85,8 @@
 
     /* Top Floating Search Bar */
     .floating-search {
-      position: absolute; top: 12px; left: 12px; z-index: 1000;
-      background: #fff; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      position: absolute; top: 14px; left: 14px; z-index: 1000;
+      background: #fff; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
       display: flex; align-items: center; padding: 6px 12px; width: 320px;
     }
     .floating-search i { color: #777; margin-right: 8px; font-size: 13px; }
@@ -98,11 +94,11 @@
       border: none; outline: none; width: 100%; font-size: 13px; font-weight: 600; color: #333;
     }
 
-    /* Bottom Right Quantile Legend (Exact DDL Bar) */
+    /* Bottom Right Quantile Legend */
     .shrug-legend {
       position: absolute; bottom: 20px; right: 20px; z-index: 1000;
-      background: #fff; padding: 10px 14px; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-      width: 270px; font-size: 10px; font-weight: 700; color: #333;
+      background: #fff; padding: 12px 16px; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      width: 280px; font-size: 10px; font-weight: 700; color: #333;
     }
     .legend-title-box { font-size: 11px; font-weight: 800; color: #1c1c1e; margin-bottom: 4px; }
     .legend-bar {
@@ -111,7 +107,7 @@
     }
     .legend-ticks { display: flex; justify-content: space-between; font-size: 10px; color: #444; font-weight: 600; }
 
-    /* Popup Card Styling (Exact DDL Card Typography) */
+    /* Popup Card Styling */
     .leaflet-popup-content-wrapper { border-radius: 6px; padding: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
     .leaflet-popup-content { margin: 0; min-width: 220px; }
     .popup-card { padding: 12px 16px; font-family: -apple-system, sans-serif; background: #f8f9fa; border-radius: 6px; }
@@ -126,19 +122,11 @@
   <!-- Left Sidebar Panel -->
   <div id="sidebar">
     <div class="brand-header">
-      <a href="#" class="brand-logo">
-        <i class="fa-solid fa-chart-line"></i>
-        <span>Development Data Lab</span>
-      </a>
-      <div class="brand-nav">
-        <a href="#">About</a>
-        <a href="#">FAQ</a>
-        <a href="#">Download</a>
-        <a href="#">Docs</a>
+      <div class="brand-title">
+        <i class="fa-solid fa-earth-asia"></i>
+        <span>INDIA GEOSPATIAL</span>
       </div>
     </div>
-
-    <div class="title-banner">SHRUG Atlas</div>
 
     <!-- Accordion Category List -->
     <div class="accordion-menu">
@@ -149,24 +137,24 @@
           Consumption and Wealth <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('rwi', this)">Relative wealth index (Meta 2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('mpi', this)">Multidimensional Poverty Index (NITI 2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('cons_exp', this)">Per capita consumption (NSSO 2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('rwi', 'Relative wealth index (Meta 2024–2026)', this)">Relative wealth index (Meta 2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('mpi', 'Multidimensional Poverty Index (NITI 2026)', this)">Multidimensional Poverty Index (NITI 2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('cons_exp', 'Per capita consumption (NSSO 2026)', this)">Per capita consumption (NSSO 2026) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 2. Health (Expanded Baseline) -->
+      <!-- 2. Health -->
       <div class="accordion-item active">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           Health <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content" style="display:flex;">
-          <div class="sub-item active" onclick="activateVariable('phc', this)">Primary health centre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('chc', this)">Community health centre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('hospital', this)">Allopathic hospital (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('subcentre', this)">Primary health subcentre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('immunization', this)">0-3 Immunization % (NFHS) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('stunting', this)">Child stunting & wasting risk % (WHO) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item active" onclick="activateVariable('phc', 'Primary health centre (2024–2026)', this)">Primary health centre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('chc', 'Community health centre (2024–2026)', this)">Community health centre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('hospital', 'Allopathic hospital (2024–2026)', this)">Allopathic hospital (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('subcentre', 'Primary health subcentre (2024–2026)', this)">Primary health subcentre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('immunization', '0-3 Immunization % (NFHS)', this)">0-3 Immunization % (NFHS) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('stunting', 'Child stunting & wasting risk % (WHO)', this)">Child stunting & wasting risk % (WHO) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -176,61 +164,61 @@
           Education <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('aser_read', this)">ASER Std III-V Literacy (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('aser_math', this)">ASER Basic Math/Division % (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('udise_elec', this)">School electricity % (UDISE+ 2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('udise_comp', this)">School computer labs % (UDISE+ 2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('aser_read', 'ASER Std III-V Literacy (2024–2026)', this)">ASER Std III-V Literacy (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('aser_math', 'ASER Basic Math/Division % (2024–2026)', this)">ASER Basic Math/Division % (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('udise_elec', 'School electricity % (UDISE+ 2026)', this)">School electricity % (UDISE+ 2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('udise_comp', 'School computer labs % (UDISE+ 2026)', this)">School computer labs % (UDISE+ 2026) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 4. Public Services & Welfare -->
+      <!-- 4. Public Services -->
       <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           Public Services <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('piped_water', this)">Piped tap water % (JJM 2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('nrega_density', this)">NREGA worker & asset density (2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('electricity_cov', this)">Household power hours (RDSS 2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('paved_road', this)">Internal paved road access (2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('piped_water', 'Piped tap water % (JJM 2024–2026)', this)">Piped tap water % (JJM 2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('nrega_density', 'NREGA worker & asset density (2026)', this)">NREGA worker & asset density (2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('electricity_cov', 'Household power hours (RDSS 2026)', this)">Household power hours (RDSS 2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('paved_road', 'Internal paved road access (2026)', this)">Internal paved road access (2026) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 5. Demographics & Social Groups (2024–2026) -->
+      <!-- 5. Demographics & Social Groups -->
       <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           Demographics & Social Groups <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('sc_dalit_pop', this)">SC / Dalit Population % (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('st_tribal_pop', this)">ST / Tribal Population % (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('obc_pop', this)">OBC Population Estimate % (NSSO/PLFS) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('muslim_pop', this)">Muslim Population Share % (Pew 2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('christian_pop', this)">Christian Population Share % (Pew 2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('sc_dalit_pop', 'SC / Dalit Population % (2024–2026)', this)">SC / Dalit Population % (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('st_tribal_pop', 'ST / Tribal Population % (2024–2026)', this)">ST / Tribal Population % (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('obc_pop', 'OBC Population Estimate % (NSSO/PLFS)', this)">OBC Population Estimate % (NSSO/PLFS) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('muslim_pop', 'Muslim Population Share % (Pew 2026)', this)">Muslim Population Share % (Pew 2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('christian_pop', 'Christian Population Share % (Pew 2026)', this)">Christian Population Share % (Pew 2026) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 6. Elections & Voting Shifts (2004–2024) -->
+      <!-- 6. Elections & Voting Shifts -->
       <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           Elections & Voting Shifts <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('area_shift', this)">Urban vs Rural Turnout & Margins <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('gender_shift', this)">Female Voter Turnout Surge & Gap <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('caste_shift', this)">Caste & Demographic Voting Blocs <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('area_shift', 'Urban vs Rural Turnout & Margins', this)">Urban vs Rural Turnout & Margins <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('gender_shift', 'Female Voter Turnout Surge & Gap', this)">Female Voter Turnout Surge & Gap <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('caste_shift', 'Caste & Demographic Voting Blocs', this)">Caste & Demographic Voting Blocs <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 7. SDG & Aspirational Progress (June 2026) -->
+      <!-- 7. SDGs & Aspirational Progress -->
       <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           SDGs & Aspirational Progress <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="activateVariable('sdg_index', this)">NITI Aayog SDG Index Score (2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('adp_progress', this)">Aspirational Districts Progress (June 2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="activateVariable('abp_progress', this)">Aspirational Blocks Delta Rank (June 2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('sdg_index', 'NITI Aayog SDG Index Score (2026)', this)">NITI Aayog SDG Index Score (2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('adp_progress', 'Aspirational Districts Progress (June 2026)', this)">Aspirational Districts Progress (June 2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="activateVariable('abp_progress', 'Aspirational Blocks Delta Rank (June 2026)', this)">Aspirational Blocks Delta Rank (June 2026) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -242,7 +230,7 @@
       <a href="#" class="footer-btn"><i class="fa-solid fa-compass"></i> Atlas Tour</a>
       <a href="#" class="footer-btn" onclick="exportMapImage()"><i class="fa-solid fa-image"></i> Save Image</a>
     </div>
-    <div class="copyright-tag">© 2026 Development Data Lab</div>
+    <div class="copyright-tag">© 2026 INDIA GEOSPATIAL</div>
   </div>
 
   <!-- Map Canvas -->
@@ -254,7 +242,7 @@
 
     <div id="map"></div>
 
-    <!-- Dynamic DDL Quantile Legend -->
+    <!-- Dynamic Quantile Legend -->
     <div class="shrug-legend">
       <div id="legendTitleBox" class="legend-title-box">Primary health centre (2024–2026)</div>
       <div id="legendBar" class="legend-bar"></div>
@@ -264,7 +252,7 @@
 </div>
 
 <script>
-  // Master Variable Configurations (Palettes, Labels, Ranges, and Units)
+  // Robust Master Config Generator for ALL Indicators
   const VAR_CONFIGS = {
     phc: {
       label: "Primary health centre (2024–2026)",
@@ -295,14 +283,14 @@
       colors: ['#fff5f0', '#fcbba1', '#fb6a4a', '#cb181d', '#67000d']
     },
     gender_shift: {
-      label: "Female Voter Turnout Surge & Gap (2004–2024)",
+      label: "Female Voter Turnout Surge & Gap",
       unit: "%",
       ticks: ["40", "50", "60", "70", "80", "90+ %"],
       gradient: "linear-gradient(to right, #f3e5f5, #ce93d8, #ab47bc, #8e24aa, #4a148c)",
       colors: ['#f3e5f5', '#ce93d8', '#ab47bc', '#8e24aa', '#4a148c']
     },
-    adp_progress: {
-      label: "Aspirational Districts Progress (June 2026)",
+    sdg_index: {
+      label: "NITI Aayog SDG Index Score (2026)",
       unit: "Score",
       ticks: ["0", "20", "40", "60", "80", "100 Score"],
       gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494, #1a2b57)",
@@ -310,7 +298,22 @@
     }
   };
 
+  // Helper function to guarantee NO indicator ever crashes
+  function getVarConfig(key, labelText) {
+    if (VAR_CONFIGS[key]) return VAR_CONFIGS[key];
+    
+    // Dynamic Fallback Generator for any missing key
+    return {
+      label: labelText || key.toUpperCase(),
+      unit: "%",
+      ticks: ["0", "15", "30", "45", "60", "75", "90+ %"],
+      gradient: "linear-gradient(to right, #c57071, #d49893, #e2cfc4, #a1c1be, #5a8a92, #386670)",
+      colors: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670']
+    };
+  }
+
   let currentVarKey = 'phc';
+  let currentVarLabel = 'Primary health centre (2024–2026)';
 
   // Initialize Map Engine
   var map = L.map('map', { zoomControl: false }).setView([22.2587, 71.1924], 7);
@@ -335,6 +338,7 @@
     popupAnchor: [0, -32]
   });
 
+  // Reliable Multi-Source GeoJSON Boundaries
   var subDistUrl = 'https://raw.githubusercontent.com/datameet/maps/master/Subdistricts/Admin2.topo.json';
   var geoJsonCache = null;
 
@@ -344,13 +348,23 @@
       var objName = Object.keys(topoData.objects)[0];
       geoJsonCache = topojson.feature(topoData, topoData.objects[objName]);
       renderMapLayer();
+    })
+    .catch(err => {
+      console.warn("Fallback to Districts topology...");
+      fetch('https://raw.githubusercontent.com/datameet/maps/master/Districts/Admin2.topo.json')
+        .then(r => r.json())
+        .then(tData => {
+          var oName = Object.keys(tData.objects)[0];
+          geoJsonCache = topojson.feature(tData, tData.objects[oName]);
+          renderMapLayer();
+        });
     });
 
   function renderMapLayer() {
     if (!geoJsonCache) return;
     subdistrictGroup.clearLayers();
 
-    const config = VAR_CONFIGS[currentVarKey] || VAR_CONFIGS['phc'];
+    const config = getVarConfig(currentVarKey, currentVarLabel);
 
     var geoLayer = L.geoJSON(geoJsonCache, {
       style: function(feature) {
@@ -372,7 +386,7 @@
       }
     }).addTo(subdistrictGroup);
 
-    // Auto-select Valsad on initial load to match DDL screenshot
+    // Auto-select initial region
     geoLayer.eachLayer(function(l) {
       if (l.feature.properties && (l.feature.properties.SUB_DIST === 'Valsad' || l.feature.properties.DISTRICT === 'Valsad')) {
         selectRegion(l, l.feature.properties, l.getBounds().getCenter());
@@ -395,7 +409,7 @@
     if (activeMarker) map.removeLayer(activeMarker);
 
     var name = props.SUB_DIST || props.DISTRICT || "Valsad";
-    const config = VAR_CONFIGS[currentVarKey] || VAR_CONFIGS['phc'];
+    const config = getVarConfig(currentVarKey, currentVarLabel);
 
     activeHighlightLayer = L.geoJSON(layer.toGeoJSON(), {
       style: { color: '#000000', weight: 2.5, fillOpacity: 0.85, fillColor: config.colors[config.colors.length - 1] }
@@ -419,11 +433,12 @@
       .openOn(map);
   }
 
-  function activateVariable(key, el) {
+  function activateVariable(key, labelText, el) {
     document.querySelectorAll('.sub-item').forEach(i => i.classList.remove('active'));
     if (el) el.classList.add('active');
     
     currentVarKey = key;
+    currentVarLabel = labelText;
     renderMapLayer();
   }
 
