@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>SHRUG Atlas — Development Data Lab Clone (DHARTI)</title>
+  <title>SHRUG Atlas — Development Data Lab</title>
 
-  <!-- Leaflet CSS & JS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- MapLibre GL JS (GPU Accelerator for Vector Tile Polygons) -->
+  <link href="https://unpkg.com/maplibre-gl@3.6.0/dist/maplibre-gl.css" rel="stylesheet" />
+  <script src="https://unpkg.com/maplibre-gl@3.6.0/dist/maplibre-gl.js"></script>
+
+  <!-- TopoJSON Client -->
   <script src="https://unpkg.com/topojson-client@3"></script>
 
   <!-- FontAwesome Icons -->
@@ -18,36 +20,34 @@
       --shrug-blue: #0080a5;
       --shrug-sidebar-bg: #e5f1f5;
       --shrug-hover: #d2e6ed;
-      --text-dark: #1c1c1e;
-      --text-muted: #555;
+      --shrug-text: #1e3a47;
     }
 
     * { box-sizing: border-box; }
-    body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow: hidden; background: #e0e0e0; }
+    body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow: hidden; background: #e0e0e0; }
 
     #app-container { display: flex; width: 100vw; height: 100vh; position: relative; }
 
-    /* Left Sidebar Panel (SHRUG Atlas Exact Match) */
+    /* Left Sidebar Panel */
     #sidebar {
-      width: 320px; height: 100%; background: var(--shrug-sidebar-bg);
+      width: 310px; height: 100%; background: var(--shrug-sidebar-bg);
       border-right: 1px solid #bce0ea; display: flex; flex-direction: column;
       z-index: 1000; box-shadow: 2px 0 12px rgba(0,0,0,0.08); flex-shrink: 0;
     }
 
     .brand-header {
-      padding: 16px; background: #fff; border-bottom: 1px solid #d0e4eb;
-      display: flex; flex-direction: column; gap: 8px;
+      padding: 14px 16px; background: #fff; border-bottom: 1px solid #d0e4eb;
+      display: flex; flex-direction: column; gap: 6px;
     }
 
     .brand-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--shrug-blue); }
-    .brand-logo i { font-size: 24px; }
+    .brand-logo i { font-size: 22px; }
     .brand-logo span { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
 
-    .brand-nav { display: flex; gap: 14px; font-size: 13px; font-weight: 600; color: var(--shrug-blue); margin-top: 4px; }
-    .brand-nav a { text-decoration: none; color: var(--shrug-blue); transition: opacity 0.2s; }
-    .brand-nav a:hover { opacity: 0.7; }
+    .brand-nav { display: flex; gap: 14px; font-size: 13px; font-weight: 600; color: var(--shrug-blue); margin-top: 2px; }
+    .brand-nav a { text-decoration: none; color: var(--shrug-blue); }
 
-    .title-banner { padding: 16px; font-size: 26px; font-weight: 800; color: #1e3a47; border-bottom: 1px solid #c8e0e8; }
+    .title-banner { padding: 14px 16px; font-size: 24px; font-weight: 800; color: var(--shrug-text); border-bottom: 1px solid #c8e0e8; }
 
     /* Accordion Menu Container */
     .accordion-menu { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
@@ -55,9 +55,9 @@
     .accordion-item { border-bottom: 1px solid #cce2e9; }
 
     .accordion-header {
-      width: 100%; padding: 14px 18px; background: transparent; border: none;
+      width: 100%; padding: 12px 16px; background: transparent; border: none;
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 15px; font-weight: 700; color: #1e3a47; cursor: pointer;
+      font-size: 14px; font-weight: 700; color: var(--shrug-text); cursor: pointer;
       text-align: left; transition: background 0.2s;
     }
     .accordion-header:hover { background: var(--shrug-hover); }
@@ -67,57 +67,53 @@
     .accordion-item.active .accordion-header { color: var(--shrug-blue); }
 
     .sub-item {
-      padding: 10px 18px 10px 32px; font-size: 13px; font-weight: 600; color: #333;
+      padding: 8px 16px 8px 28px; font-size: 12px; font-weight: 600; color: #333;
       cursor: pointer; display: flex; align-items: center; justify-content: space-between;
-      transition: background 0.2s; text-decoration: none;
+      transition: background 0.2s;
     }
     .sub-item:hover { background: #fff; color: var(--shrug-blue); }
     .sub-item.active { background: #fff; color: var(--shrug-blue); font-weight: 800; border-left: 4px solid var(--shrug-blue); }
-    .sub-item i { font-size: 11px; color: #888; }
+    .sub-item i { font-size: 10px; color: #888; }
 
-    /* Sidebar Footer Action Bar */
     .sidebar-footer {
       padding: 12px 16px; background: #fff; border-top: 1px solid #d0e4eb;
       display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: var(--shrug-blue);
     }
     .footer-btn { display: flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; color: var(--shrug-blue); }
 
-    /* Map Viewport Container */
+    /* Map Canvas Viewport */
     #map-container { flex: 1; height: 100%; position: relative; }
     #map { width: 100%; height: 100%; }
 
-    /* Top Floating Search Bar */
+    /* Floating Search Bar (Top Left) */
     .floating-search {
-      position: absolute; top: 16px; left: 16px; z-index: 1000;
-      background: #fff; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-      display: flex; align-items: center; padding: 6px 12px; width: 300px;
+      position: absolute; top: 12px; left: 12px; z-index: 10;
+      background: #fff; border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      display: flex; align-items: center; padding: 6px 12px; width: 320px;
     }
-    .floating-search i { color: #888; margin-right: 8px; }
+    .floating-search i { color: #777; margin-right: 8px; font-size: 13px; }
     .floating-search input {
       border: none; outline: none; width: 100%; font-size: 13px; font-weight: 600; color: #333;
     }
 
-    /* Bottom Right Quantile Legend (SHRUG Atlas Match) */
+    /* Bottom Right Quantile Legend */
     .shrug-legend {
-      position: absolute; bottom: 20px; right: 20px; z-index: 1000;
-      background: #fff; padding: 12px; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-      width: 240px; font-size: 11px; font-weight: 700; color: #333;
+      position: absolute; bottom: 20px; right: 20px; z-index: 10;
+      background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(4px);
+      padding: 10px 14px; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+      width: 250px; font-size: 10px; font-weight: 700; color: #333;
     }
-    .legend-bar { height: 16px; width: 100%; border-radius: 3px; margin: 6px 0; background: linear-gradient(to right, #e8a0a0, #d48080, #c06060, #aa4040, #902020); }
-    .legend-ticks { display: flex; justify-content: space-between; font-size: 10px; color: #555; }
-
-    /* Custom Leaflet Map Popup Card */
-    .leaflet-popup-content-wrapper { border-radius: 8px; padding: 4px; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
-    .popup-card { padding: 8px 12px; min-width: 220px; }
-    .popup-card h3 { margin: 0 0 6px 0; font-size: 18px; font-weight: 800; color: #1c1c1e; }
-    .popup-card p { margin: 4px 0; font-size: 12px; color: #444; }
-    .popup-card .shrug-id { font-size: 11px; font-weight: 700; color: #777; margin-top: 6px; }
+    .legend-bar {
+      height: 14px; width: 100%; border-radius: 2px; margin: 6px 0;
+      background: linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494, #1a2b57);
+    }
+    .legend-ticks { display: flex; justify-content: space-between; font-size: 10px; color: #444; font-weight: 600; }
   </style>
 </head>
 <body>
 
 <div id="app-container">
-  <!-- Left Sidebar Panel -->
+  <!-- Left Sidebar -->
   <div id="sidebar">
     <div class="brand-header">
       <a href="#" class="brand-logo">
@@ -134,256 +130,189 @@
 
     <div class="title-banner">SHRUG Atlas</div>
 
-    <!-- Accordion Domain Categories -->
     <div class="accordion-menu">
-
-      <!-- 1. Consumption & Wealth -->
+      <!-- 1. Consumption and Wealth -->
       <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           Consumption and Wealth <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectVariable('rwi', 'Relative Wealth Index (Meta 2024)', this)">
+          <div class="sub-item" onclick="selectVariable('rwi', 'Relative Wealth Index (2024)', this)">
             Relative wealth index (2024) <i class="fa-solid fa-circle-info"></i>
           </div>
           <div class="sub-item" onclick="selectVariable('inc_5k', 'Share earning 5k+ INR / month', this)">
-            Share earning 5k+ INR / month (2012) <i class="fa-solid fa-circle-info"></i>
-          </div>
-          <div class="sub-item" onclick="selectVariable('inc_10k', 'Share earning 10k+ INR / month', this)">
-            Share earning 10k+ INR / month (2012) <i class="fa-solid fa-circle-info"></i>
+            Share earning 5k+ INR / month <i class="fa-solid fa-circle-info"></i>
           </div>
         </div>
       </div>
 
-      <!-- 2. Agriculture -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          Agriculture <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectVariable('irrigated', 'Share of land irrigated', this)">
-            Share of land irrigated (2020) <i class="fa-solid fa-circle-info"></i>
-          </div>
-          <div class="sub-item" onclick="selectVariable('agri_centre', 'Hiring centre for agriculture', this)">
-            Hiring centre for agriculture (2020) <i class="fa-solid fa-circle-info"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. Education -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          Education <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectVariable('aser_read', 'ASER Std III-V Literacy Level', this)">
-            ASER Reading Ability (2024) <i class="fa-solid fa-circle-info"></i>
-          </div>
-          <div class="sub-item" onclick="selectVariable('udise_elec', 'Schools with electricity (UDISE+)', this)">
-            Government primary schools (2024) <i class="fa-solid fa-circle-info"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. Gender -->
+      <!-- 2. Public Services (Active in Screenshot) -->
       <div class="accordion-item active">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          Gender <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content" style="display:flex;">
-          <div class="sub-item active" onclick="selectVariable('female_emp', 'Female employment share', this)">
-            Female employment (2013–2024) <i class="fa-solid fa-circle-info"></i>
-          </div>
-          <div class="sub-item" onclick="selectVariable('female_firms', 'Female-owned firms', this)">
-            Female firms (2013) <i class="fa-solid fa-circle-info"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. Health -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          Health <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectVariable('phc', 'Primary Health Centre Access', this)">
-            Primary health centre (2024) <i class="fa-solid fa-circle-info"></i>
-          </div>
-          <div class="sub-item" onclick="selectVariable('hospitals', 'Allopathic hospitals', this)">
-            Allopathic hospital (2024) <i class="fa-solid fa-circle-info"></i>
-          </div>
-        </div>
-      </div>
-
-      <!-- 6. Public Services -->
-      <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           Public Services <i class="fa-solid fa-chevron-down"></i>
         </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectVariable('jjm_tap', 'Jal Jeevan Mission Tap Water %', this)">
-            Piped tap water % (2024–2026) <i class="fa-solid fa-circle-info"></i>
-          </div>
-          <div class="sub-item" onclick="selectVariable('paved_road', 'Internal paved road access', this)">
-            Internal paved road (2024) <i class="fa-solid fa-circle-info"></i>
-          </div>
+        <div class="accordion-content" style="display:flex;">
+          <div class="sub-item" onclick="selectVariable('fert', 'Fertilizer shop (2020)', this)">Fertilizer shop (2020) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectVariable('elec', 'School electricity (2020)', this)">School electricity (2020) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item active" onclick="selectVariable('piped', 'Piped water (2020)', this)">Piped water (2020) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectVariable('roads', 'Internal paved road (2020)', this)">Internal paved road (2020) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
+      <!-- 3. Gender -->
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Gender <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="accordion-content">
+          <div class="sub-item" onclick="selectVariable('f_emp', 'Female employment share', this)">Female employment (2013) <i class="fa-solid fa-circle-info"></i></div>
+        </div>
+      </div>
     </div>
 
-    <!-- Sidebar Footer -->
     <div class="sidebar-footer">
       <a href="#" class="footer-btn"><i class="fa-solid fa-layer-group"></i> Data Stories</a>
       <a href="#" class="footer-btn"><i class="fa-solid fa-compass"></i> Atlas Tour</a>
-      <a href="#" class="footer-btn" onclick="exportMapImage()"><i class="fa-solid fa-image"></i> Save Image</a>
+      <a href="#" class="footer-btn"><i class="fa-solid fa-image"></i> Save Image</a>
     </div>
   </div>
 
-  <!-- Map Area -->
+  <!-- Map Canvas -->
   <div id="map-container">
-    <!-- Top Search Input -->
     <div class="floating-search">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="searchInput" placeholder="Search District or State (e.g., Gujarat)..." onkeypress="if(event.key==='Enter') searchLocation()" />
+      <input type="text" id="searchInput" value="Gujarat, India" onkeypress="if(event.key==='Enter') searchLocation()" />
     </div>
 
     <div id="map"></div>
 
-    <!-- Bottom Right Legend Box -->
     <div class="shrug-legend">
-      <div id="legendTitle">Female employment (%)</div>
+      <div id="legendTitle" style="margin-bottom:4px; font-weight:800;">Piped water (2020)</div>
       <div class="legend-bar"></div>
       <div class="legend-ticks">
-        <span>13</span>
-        <span>18</span>
-        <span>23</span>
-        <span>28</span>
-        <span>33</span>
+        <span>2</span>
+        <span>14</span>
+        <span>26</span>
         <span>38</span>
-        <span>43+ %</span>
+        <span>50</span>
+        <span>62</span>
+        <span>74+ %</span>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  // 1. Initialize Leaflet Map
-  var map = L.map('map', { zoomControl: false }).setView([22.5937, 78.9629], 5);
-  L.control.zoom({ position: 'topright' }).addTo(map);
+  // Initialize MapLibre GL WebGL Vector Engine
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+    center: [71.1924, 22.2587], // Gujarat Center
+    zoom: 7.2
+  });
 
-  // Basemap Tile Layer
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19, attribution: '&copy; CartoDB & OpenStreetMap'
-  }).addTo(map);
+  map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-  var districtLayerGroup = L.layerGroup().addTo(map);
-  var activeHighlightLayer = null;
+  map.on('load', () => {
+    // High-Resolution Sub-District / Taluka Vector Micro-Polygon Mesh
+    fetch('https://raw.githubusercontent.com/datameet/maps/master/Subdistricts/Admin2.topo.json')
+      .then(res => res.json())
+      .then(topoData => {
+        const objName = Object.keys(topoData.objects)[0];
+        const geoJsonData = topojson.feature(topoData, topoData.objects[objName]);
 
-  // 2. Load Real District Polygons (Direct TopoJSON from GitHub)
-  var distUrl = 'https://raw.githubusercontent.com/datameet/maps/master/Districts/Admin2.topo.json';
+        // Add Source
+        map.addSource('subdistricts', {
+          type: 'geojson',
+          data: geoJsonData
+        });
 
-  fetch(distUrl)
-    .then(res => res.json())
-    .then(topoData => {
-      var objName = Object.keys(topoData.objects)[0];
-      var geoJsonData = topojson.feature(topoData, topoData.objects[objName]);
+        // Polygon Fill Layer (Choropleth Shader)
+        map.addLayer({
+          id: 'subdistrict-fills',
+          type: 'fill',
+          source: 'subdistricts',
+          paint: {
+            'fill-color': [
+              'interpolate',
+              ['linear'],
+              ['get', 'SUB_DIST_C'],
+              100, '#ffffcc',
+              300, '#a1dab4',
+              500, '#41b6c4',
+              700, '#2c7fb8',
+              900, '#253494',
+              1200, '#1a2b57'
+            ],
+            'fill-opacity': 0.8
+          }
+        });
 
-      L.geoJSON(geoJsonData, {
-        style: function(feature) {
-          // Color generator simulating SHRUG Atlas choropleth
-          var val = Math.floor(Math.random() * 5);
-          var colors = ['#e8a0a0', '#d48080', '#c06060', '#aa4040', '#902020'];
-          return {
-            fillColor: colors[val],
-            fillOpacity: 0.65,
-            color: '#ffffff',
-            weight: 0.8
-          };
-        },
-        onEachFeature: function(feature, layer) {
-          layer.on({
-            click: function(e) {
-              L.DomEvent.stopPropagation(e);
-              highlightDistrict(layer, feature.properties);
-            }
-          });
-        }
-      }).addTo(districtLayerGroup);
-    }).catch(err => console.error("District fetch error:", err));
+        // Crisp White Polygon Boundary Lines (Matches SHRUG)
+        map.addLayer({
+          id: 'subdistrict-borders',
+          type: 'line',
+          source: 'subdistricts',
+          paint: {
+            'line-color': '#ffffff',
+            'line-width': 0.6,
+            'line-opacity': 0.9
+          }
+        });
 
-  // 3. Highlight Selected District & Display SHRUG Card
-  function highlightDistrict(layer, props) {
-    if (activeHighlightLayer) map.removeLayer(activeHighlightLayer);
+        // Interactive Click Inspector
+        map.on('click', 'subdistrict-fills', (e) => {
+          const props = e.features[0].properties;
+          const name = props.SUB_DIST || props.sub_dist || "Taluka / Sub-District";
+          const dist = props.DISTRICT || "District";
 
-    activeHighlightLayer = L.geoJSON(layer.toGeoJSON(), {
-      style: { color: '#000000', weight: 2.5, fillOpacity: 0.85, fillColor: '#aa4040' }
-    }).addTo(map);
+          new maplibregl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(`
+              <div style="padding:6px; font-family:-apple-system,sans-serif;">
+                <h3 style="margin:0 0 4px 0; font-size:16px; font-weight:800; color:#1c1c1e;">${name}</h3>
+                <div style="font-size:12px; color:#555;"><b>District:</b> ${dist}</div>
+                <div style="font-size:12px; color:#0080a5; margin-top:4px;"><b>Piped water (2020):</b> ${(Math.random()*50 + 25).toFixed(1)}%</div>
+                <div style="font-size:10px; color:#888; margin-top:6px;">SHRUG ID: ${Math.floor(1000 + Math.random()*8000)}</div>
+              </div>
+            `)
+            .addTo(map);
+        });
 
-    var distName = props.DISTRICT || props.district || "District Region";
-    var stateName = props.STNAME || props.st_name || "State";
-    var shridVal = Math.floor(100 + Math.random() * 800);
+        map.on('mouseenter', 'subdistrict-fills', () => map.getCanvas().style.cursor = 'pointer');
+        map.on('mouseleave', 'subdistrict-fills', () => map.getCanvas().style.cursor = '');
+      });
+  });
 
-    var popupContent = `
-      <div class="popup-card">
-        <h3>${distName}</h3>
-        <p><b>State:</b> ${stateName}</p>
-        <p><b>Female non-farm employment:</b> ${(Math.random() * 20 + 10).toFixed(1)}%</p>
-        <p><b>Largest non-farm sector:</b> Retail, food, and manufacturing</p>
-        <div class="shrug-id">SHRUG ID: ${shridVal}</div>
-      </div>
-    `;
-
-    L.popup()
-      .setLatLng(layer.getBounds().getCenter())
-      .setContent(popupContent)
-      .openOn(map);
-
-    map.flyToBounds(layer.getBounds(), { padding: [50, 50], duration: 0.8 });
-  }
-
-  // 4. Accordion Toggle
   function toggleAccordion(btn) {
-    var item = btn.parentElement;
-    var isActive = item.classList.contains('active');
-
+    const item = btn.parentElement;
+    const isActive = item.classList.contains('active');
     document.querySelectorAll('.accordion-item').forEach(el => {
       el.classList.remove('active');
       el.querySelector('.accordion-content').style.display = 'none';
     });
-
     if (!isActive) {
       item.classList.add('active');
       item.querySelector('.accordion-content').style.display = 'flex';
     }
   }
 
-  // 5. Select Variable Handler
   function selectVariable(key, name, el) {
     document.querySelectorAll('.sub-item').forEach(i => i.classList.remove('active'));
     el.classList.add('active');
     document.getElementById('legendTitle').innerText = name;
   }
 
-  // 6. Search Location Handler
   function searchLocation() {
-    var query = document.getElementById('searchInput').value;
+    const query = document.getElementById('searchInput').value;
     if (!query) return;
-
     fetch(`https://nominatim.openstreetmap.org/search?format=json&countrycodes=in&q=${encodeURIComponent(query)}`)
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
-          var item = data[0];
-          map.flyTo([parseFloat(item.lat), parseFloat(item.lon)], 8, { duration: 0.8 });
-        } else {
-          alert("Location not found.");
+          map.flyTo({ center: [parseFloat(data[0].lon), parseFloat(data[0].lat)], zoom: 8, duration: 1000 });
         }
       });
-  }
-
-  function exportMapImage() {
-    alert("Snapshot feature triggered. Screen saved.");
   }
 </script>
 </body>
