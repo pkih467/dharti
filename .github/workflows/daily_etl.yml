@@ -2,9 +2,9 @@ name: DHARTI Automated Daily Data Sync (3 AM IST)
 
 on:
   schedule:
-    # Runs at 21:30 UTC every day = 3:00 AM IST (Indian Standard Time)
+    # Runs at 21:30 UTC = 3:00 AM IST (Indian Standard Time)
     - cron: '30 21 * * *'
-  workflow_dispatch: # Allows manual trigger anytime from GitHub Actions tab
+  workflow_dispatch:
 
 jobs:
   update-datasets:
@@ -20,33 +20,24 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install ETL & Geospatial Dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pandas geopandas pyarrow duckdb requests huggingface_hub
 
-      - name: Execute Live Government & Global API Pipeline
+      - name: Execute Live Scrapers & Hugging Face Sync
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           echo " Starting DHARTI automated daily ETL process at 3:00 AM IST..."
-          
-          # 1. Fetch live Jal Jeevan Mission, UDISE+, ABDM, and PFMS feeds
-          python scripts/fetch_gov_apis.py
-          
-          # 2. Sync ECI & TCPD election microdata updates
-          python scripts/sync_election_data.py
-          
-          # 3. Compress into Parquet and push to Hugging Face Hub ($0 Storage)
-          python scripts/push_to_huggingface.py
-          
-          echo " Daily ETL Sync Complete! Datasets successfully updated on Hugging Face."
+          python scripts/etl_pipeline.py
+          echo " Daily Sync Complete!"
 
-      - name: Auto-Commit Status Metrics to Repo
+      - name: Log Sync Status
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           echo "Last successful sync: $(date -u)" > last_sync_status.txt
           git add last_sync_status.txt
-          git commit -m "chore(etl): automated daily sync log update [3:00 AM IST]" || exit 0
+          git commit -m "chore(etl): automated daily sync log [3:00 AM IST]" || exit 0
           git push
