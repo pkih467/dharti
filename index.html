@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>INDIA GEOSPATIAL</title>
 
-  <!-- Leaflet Map Engine & TopoJSON Parser -->
+  <!-- Leaflet Map Engine -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/topojson-client@3"></script>
 
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -74,7 +73,7 @@
     #map-container { flex: 1; height: 100%; position: relative; }
     #map { width: 100%; height: 100%; background: #e0ecef; }
 
-    /* Top Floating Navigation Controls */
+    /* Top Navigation Controls */
     .floating-nav-bar {
       position: absolute; top: 14px; left: 14px; z-index: 1000;
       display: flex; gap: 8px; align-items: center;
@@ -140,12 +139,12 @@
       </div>
 
       <!-- 3. Education -->
-      <div class="accordion-item active">
+      <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           Education <i class="fa-solid fa-chevron-down"></i>
         </button>
-        <div class="accordion-content" style="display:flex;">
-          <div class="sub-item active" onclick="selectIndicator('aser_read', 'ASER Std III-V Literacy (2024–2026)', this)">ASER Std III-V Literacy (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+        <div class="accordion-content">
+          <div class="sub-item" onclick="selectIndicator('aser_read', 'ASER Std III-V Literacy (2024–2026)', this)">ASER Std III-V Literacy (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
           <div class="sub-item" onclick="selectIndicator('school_elec', 'School electricity (UDISE+ 2026)', this)">School electricity (UDISE+ 2026) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
@@ -215,13 +214,13 @@
         </div>
       </div>
 
-      <!-- 10. Elections & Voting Shifts -->
-      <div class="accordion-item">
+      <!-- 10. Elections & Voting Shifts (Active Default) -->
+      <div class="accordion-item active">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           Elections & Voting Shifts <i class="fa-solid fa-chevron-down"></i>
         </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('turnout_shift', 'Urban vs Rural Turnout & Margins', this)">Urban vs Rural Turnout & Margins <i class="fa-solid fa-circle-info"></i></div>
+        <div class="accordion-content" style="display:flex;">
+          <div class="sub-item active" onclick="selectIndicator('turnout_shift', 'Urban vs Rural Turnout & Margins', this)">Urban vs Rural Turnout & Margins <i class="fa-solid fa-circle-info"></i></div>
           <div class="sub-item" onclick="selectIndicator('female_turnout', 'Female Voter Turnout Surge & Gap', this)">Female Voter Turnout Surge & Gap <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
@@ -253,7 +252,7 @@
           <option value="25.0961,85.3131,7">Bihar</option>
           <option value="21.2787,81.8661,7">Chhattisgarh</option>
           <option value="15.2993,74.1240,9">Goa</option>
-          <option value="22.2587,71.1924,7" selected>Gujarat</option>
+          <option value="22.2587,71.1924,7">Gujarat</option>
           <option value="29.0588,76.0856,8">Haryana</option>
           <option value="31.1048,77.1734,8">Himachal Pradesh</option>
           <option value="23.6102,85.2799,7">Jharkhand</option>
@@ -274,7 +273,7 @@
           <option value="23.9408,91.9882,9">Tripura</option>
           <option value="26.8467,80.9462,7">Uttar Pradesh</option>
           <option value="30.0668,79.0193,8">Uttarakhand</option>
-          <option value="22.9868,87.8550,7">West Bengal</option>
+          <option value="22.9868,87.8550,7" selected>West Bengal</option>
         </optgroup>
         <optgroup label="── 8 UNION TERRITORIES ──">
           <option value="11.7401,92.6586,7">Andaman & Nicobar Islands</option>
@@ -299,21 +298,21 @@
 </div>
 
 <script>
-  // Metric Color Schemes
+  // Metric Color Palettes
   const COLOR_PALETTES = {
+    turnout_shift: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670'],
     aser_read: ['#fff5f0', '#fcbba1', '#fb6a4a', '#cb181d', '#67000d'],
     piped_water: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494', '#1a2b57'],
     rwi: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670'],
-    phc: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670'],
     sc_pop: ['#f3e5f5', '#ce93d8', '#ab47bc', '#7b1fa2', '#4a148c'],
     sdg_index: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494']
   };
 
-  let activeIndicatorKey = 'aser_read';
-  let activeTitle = 'ASER Std III-V Literacy (2024–2026)';
+  let activeIndicatorKey = 'turnout_shift';
+  let activeTitle = 'Urban vs Rural Turnout & Margins';
 
   // Map Setup
-  var map = L.map('map', { zoomControl: false }).setView([22.5937, 78.9629], 5);
+  var map = L.map('map', { zoomControl: false }).setView([22.9868, 87.8550], 7);
   L.control.zoom({ position: 'topright' }).addTo(map);
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -337,16 +336,15 @@
 
   var geoJsonCache = null;
 
-  // Load Geographic Vector Topology
+  // Reliable CORS-enabled GeoJSON Fetch via jsDelivr CDN
   function loadBoundaries() {
-    fetch('https://raw.githubusercontent.com/datameet/maps/master/Districts/Admin2.topo.json')
+    fetch('https://cdn.jsdelivr.net/gh/datameet/maps@master/Districts/Admin2.geojson')
       .then(res => res.json())
-      .then(topoData => {
-        var objName = Object.keys(topoData.objects)[0];
-        geoJsonCache = topojson.feature(topoData, topoData.objects[objName]);
+      .then(geoJsonData => {
+        geoJsonCache = geoJsonData;
         renderMap();
       })
-      .catch(err => console.error("Topology fetch failed:", err));
+      .catch(err => console.error("District boundaries fetch error:", err));
   }
 
   loadBoundaries();
@@ -355,7 +353,7 @@
     if (!geoJsonCache) return;
     polygonLayerGroup.clearLayers();
 
-    const colors = COLOR_PALETTES[activeIndicatorKey] || COLOR_PALETTES['aser_read'];
+    const colors = COLOR_PALETTES[activeIndicatorKey] || COLOR_PALETTES['turnout_shift'];
 
     var geoLayer = L.geoJSON(geoJsonCache, {
       style: function(feature) {
@@ -377,9 +375,9 @@
       }
     }).addTo(polygonLayerGroup);
 
-    // Initial highlight for Gujarat / Dewas region
+    // Initial highlight for active state/district
     geoLayer.eachLayer(function(l) {
-      if (l.feature.properties && (l.feature.properties.DISTRICT === 'Dewas' || l.feature.properties.district === 'Dewas' || l.feature.properties.ST_NAME === 'Gujarat')) {
+      if (l.feature.properties && (l.feature.properties.district === 'Bardhaman' || l.feature.properties.DISTRICT === 'Bardhaman')) {
         selectRegion(l, l.feature.properties, l.getBounds().getCenter());
       }
     });
@@ -389,8 +387,8 @@
     if (activeHighlightLayer) map.removeLayer(activeHighlightLayer);
     if (activeMarker) map.removeLayer(activeMarker);
 
-    var name = props.DISTRICT || props.district || props.dtname || "Region";
-    const colors = COLOR_PALETTES[activeIndicatorKey] || COLOR_PALETTES['aser_read'];
+    var name = props.district || props.DISTRICT || props.dtname || "District Region";
+    const colors = COLOR_PALETTES[activeIndicatorKey] || COLOR_PALETTES['turnout_shift'];
 
     activeHighlightLayer = L.geoJSON(layer.toGeoJSON(), {
       style: { color: '#000000', weight: 2.5, fillOpacity: 0.85, fillColor: colors[colors.length - 1] }
@@ -404,7 +402,7 @@
       <div class="popup-card">
         <h3>${name}</h3>
         <p><b>${activeTitle}:</b> ${val}%</p>
-        <p><b>Largest non-farm sector by employment:</b> Retail of food, beverages, and tobacco</p>
+        <p><b>State:</b> ${props.stname || props.ST_NAME || 'West Bengal'}</p>
         <div class="shrug-id">SHRUG ID: ${Math.floor(100 + Math.random() * 800)}</div>
       </div>
     `;
