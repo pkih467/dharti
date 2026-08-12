@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>INDIA GEOSPATIAL</title>
 
-  <!-- Leaflet Map Engine -->
+  <!-- Leaflet Map Engine & TopoJSON Parser -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/topojson-client@3"></script>
 
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -261,7 +262,7 @@
           <option value="22.9734,78.6569,7">Madhya Pradesh</option>
           <option value="19.7515,75.7139,7">Maharashtra</option>
           <option value="24.6637,93.9063,8">Manipur</option>
-          <option value="25.4670,91.3662,8">Meghalaya</option>
+          <option value="25.4670,91.3662,8" selected>Meghalaya</option>
           <option value="23.1645,92.9376,8">Mizoram</option>
           <option value="26.1584,94.5624,8">Nagaland</option>
           <option value="20.9517,85.0985,7">Odisha</option>
@@ -273,7 +274,7 @@
           <option value="23.9408,91.9882,9">Tripura</option>
           <option value="26.8467,80.9462,7">Uttar Pradesh</option>
           <option value="30.0668,79.0193,8">Uttarakhand</option>
-          <option value="22.9868,87.8550,7" selected>West Bengal</option>
+          <option value="22.9868,87.8550,7">West Bengal</option>
         </optgroup>
         <optgroup label="── 8 UNION TERRITORIES ──">
           <option value="11.7401,92.6586,7">Andaman & Nicobar Islands</option>
@@ -312,7 +313,7 @@
   let activeTitle = 'Urban vs Rural Turnout & Margins';
 
   // Map Setup
-  var map = L.map('map', { zoomControl: false }).setView([22.9868, 87.8550], 7);
+  var map = L.map('map', { zoomControl: false }).setView([25.4670, 91.3662], 8);
   L.control.zoom({ position: 'topright' }).addTo(map);
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -336,15 +337,28 @@
 
   var geoJsonCache = null;
 
-  // Reliable CORS-enabled GeoJSON Fetch via jsDelivr CDN
+  // Reliable TopoJSON Fetch via CDN
   function loadBoundaries() {
-    fetch('https://cdn.jsdelivr.net/gh/datameet/maps@master/Districts/Admin2.geojson')
-      .then(res => res.json())
-      .then(geoJsonData => {
-        geoJsonCache = geoJsonData;
+    fetch('https://cdn.jsdelivr.net/gh/datameet/maps@master/Districts/Admin2.topo.json')
+      .then(res => {
+        if (!res.ok) throw new Error("HTTP Error " + res.status);
+        return res.json();
+      })
+      .then(topoData => {
+        var objName = Object.keys(topoData.objects)[0];
+        geoJsonCache = topojson.feature(topoData, topoData.objects[objName]);
         renderMap();
       })
-      .catch(err => console.error("District boundaries fetch error:", err));
+      .catch(err => {
+        console.warn("Primary TopoJSON fetch failed, attempting GeoJSON backup...", err);
+        fetch('https://cdn.jsdelivr.net/gh/geohacker/india@master/district/india_district.geojson')
+          .then(r => r.json())
+          .then(geoData => {
+            geoJsonCache = geoData;
+            renderMap();
+          })
+          .catch(e => console.error("Backup fetch failed:", e));
+      });
   }
 
   loadBoundaries();
@@ -375,9 +389,9 @@
       }
     }).addTo(polygonLayerGroup);
 
-    // Initial highlight for active state/district
+    // Initial highlight for Shillong/East Khasi Hills region
     geoLayer.eachLayer(function(l) {
-      if (l.feature.properties && (l.feature.properties.district === 'Bardhaman' || l.feature.properties.DISTRICT === 'Bardhaman')) {
+      if (l.feature.properties && (l.feature.properties.DISTRICT === 'East Khasi Hills' || l.feature.properties.district === 'East Khasi Hills' || l.feature.properties.ST_NAME === 'Meghalaya')) {
         selectRegion(l, l.feature.properties, l.getBounds().getCenter());
       }
     });
@@ -387,7 +401,7 @@
     if (activeHighlightLayer) map.removeLayer(activeHighlightLayer);
     if (activeMarker) map.removeLayer(activeMarker);
 
-    var name = props.district || props.DISTRICT || props.dtname || "District Region";
+    var name = props.DISTRICT || props.district || props.dtname || props.NAME_2 || "East Khasi Hills";
     const colors = COLOR_PALETTES[activeIndicatorKey] || COLOR_PALETTES['turnout_shift'];
 
     activeHighlightLayer = L.geoJSON(layer.toGeoJSON(), {
@@ -402,7 +416,7 @@
       <div class="popup-card">
         <h3>${name}</h3>
         <p><b>${activeTitle}:</b> ${val}%</p>
-        <p><b>State:</b> ${props.stname || props.ST_NAME || 'West Bengal'}</p>
+        <p><b>State:</b> ${props.stname || props.ST_NAME || 'Meghalaya'}</p>
         <div class="shrug-id">SHRUG ID: ${Math.floor(100 + Math.random() * 800)}</div>
       </div>
     `;
