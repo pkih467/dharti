@@ -45,7 +45,6 @@ def process_and_impute_dharti_master():
     df = pd.DataFrame(data)
     
     # 3. Apply SHRUG Imputation Logic (80% Weight Minimum Coverage Check)
-    # Filter land areas < 0.1 sq km as per SHRUG specification
     df['land_area_sq_km'] = np.where(df['land_area_sq_km'] < 0.1, np.nan, df['land_area_sq_km'])
     df['land_area_sq_km'] = df['land_area_sq_km'].fillna(df['land_area_sq_km'].mean())
     
