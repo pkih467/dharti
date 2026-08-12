@@ -45,6 +45,29 @@
     }
     .brand-title i { color: var(--brand-blue); font-size: 22px; }
 
+    /* Left Sidebar Control Box (State Dropdown + Search Tab) */
+    .sidebar-controls {
+      padding: 12px 16px; background: #fff; border-bottom: 1px solid var(--border-color);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+
+    .control-group { display: flex; flex-direction: column; gap: 4px; }
+    .control-label { font-size: 11px; font-weight: 800; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .sidebar-dropdown {
+      width: 100%; background: #f8f9fa; border: 1px solid var(--border-color);
+      border-radius: 4px; padding: 7px 10px; font-size: 12px; font-weight: 700;
+      color: var(--text-dark); outline: none; cursor: pointer; height: 34px;
+    }
+    .sidebar-dropdown:focus { border-color: var(--brand-blue); }
+
+    .sidebar-search {
+      width: 100%; background: #f8f9fa; border: 1px solid var(--border-color);
+      border-radius: 4px; display: flex; align-items: center; padding: 6px 10px; height: 34px;
+    }
+    .sidebar-search i { color: #777; margin-right: 8px; font-size: 12px; }
+    .sidebar-search input { border: none; outline: none; background: transparent; width: 100%; font-size: 12px; font-weight: 600; color: #333; }
+
     /* 16-Domain Accordion Menu */
     .accordion-menu { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
     .accordion-item { border-bottom: 1px solid var(--border-color); }
@@ -73,25 +96,6 @@
     /* Map Canvas */
     #map-container { flex: 1; height: 100%; position: relative; }
     #map { width: 100%; height: 100%; background: #e0ecef; }
-
-    /* Top Floating Controls Bar */
-    .floating-nav-bar {
-      position: absolute; top: 14px; left: 14px; z-index: 1000;
-      display: flex; gap: 8px; align-items: center;
-    }
-
-    .state-dropdown {
-      background: #fff; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-      padding: 6px 10px; border: none; outline: none; font-size: 12px; font-weight: 700;
-      color: var(--text-dark); cursor: pointer; height: 36px;
-    }
-
-    .floating-search {
-      background: #fff; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-      display: flex; align-items: center; padding: 6px 12px; width: 270px; height: 36px;
-    }
-    .floating-search i { color: #777; margin-right: 8px; font-size: 12px; }
-    .floating-search input { border: none; outline: none; width: 100%; font-size: 12px; font-weight: 600; color: #333; }
 
     /* Popup Card Typography (Exact DDL Format) */
     .leaflet-popup-content-wrapper { border-radius: 6px; padding: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
@@ -124,6 +128,66 @@
       </div>
     </div>
 
+    <!-- Administrative Selection Controls (In Left Panel) -->
+    <div class="sidebar-controls">
+      <!-- State / UT Selector -->
+      <div class="control-group">
+        <div class="control-label">State / Union Territory</div>
+        <select id="stateSelect" class="sidebar-dropdown" onchange="handleStateSelect(this.value)">
+          <option value="22.5937,78.9629,5,India">🇮🇳 All India</option>
+          <optgroup label="── 28 STATES ──">
+            <option value="15.9129,79.7400,7,Andhra Pradesh">Andhra Pradesh</option>
+            <option value="28.2180,94.7278,7,Arunachal Pradesh">Arunachal Pradesh</option>
+            <option value="26.2006,92.9376,7,Assam">Assam</option>
+            <option value="25.0961,85.3131,7,Bihar">Bihar</option>
+            <option value="21.2787,81.8661,7,Chhattisgarh">Chhattisgarh</option>
+            <option value="15.2993,74.1240,9,Goa">Goa</option>
+            <option value="22.2587,71.1924,7,Gujarat" selected>Gujarat</option>
+            <option value="29.0588,76.0856,8,Haryana">Haryana</option>
+            <option value="31.1048,77.1734,8,Himachal Pradesh">Himachal Pradesh</option>
+            <option value="23.6102,85.2799,7,Jharkhand">Jharkhand</option>
+            <option value="15.3173,75.7139,7,Karnataka">Karnataka</option>
+            <option value="10.8505,76.2711,8,Kerala">Kerala</option>
+            <option value="22.9734,78.6569,7,Madhya Pradesh">Madhya Pradesh</option>
+            <option value="19.7515,75.7139,7,Maharashtra">Maharashtra</option>
+            <option value="24.6637,93.9063,8,Manipur">Manipur</option>
+            <option value="25.4670,91.3662,8,Meghalaya">Meghalaya</option>
+            <option value="23.1645,92.9376,8,Mizoram">Mizoram</option>
+            <option value="26.1584,94.5624,8,Nagaland">Nagaland</option>
+            <option value="20.9517,85.0985,7,Odisha">Odisha</option>
+            <option value="31.1471,75.3412,8,Punjab">Punjab</option>
+            <option value="27.0238,74.2179,7,Rajasthan">Rajasthan</option>
+            <option value="27.5330,88.5122,9,Sikkim">Sikkim</option>
+            <option value="11.1271,78.6569,7,Tamil Nadu">Tamil Nadu</option>
+            <option value="18.1124,79.0193,7,Telangana">Telangana</option>
+            <option value="23.9408,91.9882,9,Tripura">Tripura</option>
+            <option value="26.8467,80.9462,7,Uttar Pradesh">Uttar Pradesh</option>
+            <option value="30.0668,79.0193,8,Uttarakhand">Uttarakhand</option>
+            <option value="22.9868,87.8550,7,West Bengal">West Bengal</option>
+          </optgroup>
+          <optgroup label="── 8 UNION TERRITORIES ──">
+            <option value="11.7401,92.6586,7,Andaman & Nicobar Islands">Andaman & Nicobar Islands</option>
+            <option value="30.7333,76.7794,11,Chandigarh">Chandigarh</option>
+            <option value="20.3974,72.8328,10,Dadra & Nagar Haveli and Daman & Diu">Dadra & Nagar Haveli and Daman & Diu</option>
+            <option value="28.7041,77.1025,10,Delhi">Delhi (NCT)</option>
+            <option value="33.7782,76.5762,7,Jammu & Kashmir">Jammu & Kashmir</option>
+            <option value="34.1526,77.5771,7,Ladakh">Ladakh</option>
+            <option value="10.5667,72.6417,8,Lakshadweep">Lakshadweep</option>
+            <option value="11.9416,79.8083,10,Puducherry">Puducherry</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <!-- District / City Search Input -->
+      <div class="control-group">
+        <div class="control-label">District / City Search</div>
+        <div class="sidebar-search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="searchInput" placeholder="Search District or City..." onkeypress="if(event.key==='Enter') searchLocation()" />
+        </div>
+      </div>
+    </div>
+
     <!-- 16 Domain Category Accordions -->
     <div class="accordion-menu">
 
@@ -133,8 +197,7 @@
           1. Administrative Boundaries <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('admin_dist', 'District & Sub-District Boundaries', this)">District & Sub-District Geometries <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('admin_village', 'Village & Habitation Units (500k+)', this)">Village & Habitation Units <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('admin_dist', 'District & Sub-District Geometries', this)">District & Sub-District Geometries <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -144,8 +207,7 @@
           2. Electoral Boundaries & Shifts <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('voter_shift', 'Voter Behavior Shift (2004–2024)', this)">Voter Shift (2004–2024) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('ac_margins', 'Assembly Constituency Victory Margins', this)">Assembly Victory Margins <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('voter_shift', 'Voter Behavior Shift (2004–2024)', this)">Voter Behavior Shift <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -157,7 +219,6 @@
         <div class="accordion-content">
           <div class="sub-item" onclick="selectIndicator('sc_pop', 'SC / Dalit Population Share (%)', this)">SC / Dalit Share % <i class="fa-solid fa-circle-info"></i></div>
           <div class="sub-item" onclick="selectIndicator('st_pop', 'ST / Tribal Population Share (%)', this)">ST / Tribal Share % <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('age_breakup', 'Age Pyramid & Youth Dependency Ratio', this)">Youth Age Pyramid % <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -168,7 +229,6 @@
         </button>
         <div class="accordion-content">
           <div class="sub-item" onclick="selectIndicator('jjm_water', 'Piped Drinking Water % (JJM Live)', this)">JJM Piped Water % <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('water_bodies', 'Water Body Census Density', this)">Water Body Census Density <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -179,7 +239,6 @@
         </button>
         <div class="accordion-content">
           <div class="sub-item" onclick="selectIndicator('pmgsy_roads', 'PMGSY Rural All-Weather Road Access %', this)">PMGSY Rural Road Access % <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('nh_rail_density', 'National Highways & Rail Density', this)">Highways & Rail Density <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -189,7 +248,7 @@
           6. Urban Building Footprints <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('amrut_footprints', 'AMRUT/Bhuvan Built-up Density', this)">Urban Built-up Density <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('amrut_footprints', 'Urban Built-up Density', this)">Urban Built-up Density <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -199,7 +258,6 @@
           7. Healthcare Facilities <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('abdm_hfr', 'ABDM Health Facility Registry (2024–2025)', this)">ABDM Facility Registry <i class="fa-solid fa-circle-info"></i></div>
           <div class="sub-item" onclick="selectIndicator('phc_coverage', 'Primary Health Centre (PHC) Access', this)">Primary Health Centres <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
@@ -210,9 +268,7 @@
           8. Education & Amenities <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('udise_elec', 'School Electricity % (UDISE+ 2023–2024)', this)">School Electricity % <i class="fa-solid fa-circle-info"></i></div>
           <div class="sub-item" onclick="selectIndicator('aser_lit', 'ASER Std III-V Literacy (2024)', this)">ASER Std III-V Literacy <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('aishe_stem', 'Women in STEM Enrollment % (AISHE)', this)">Women in STEM % <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -222,7 +278,7 @@
           9. Urban Wards & Slums <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('ward_slums', 'Municipal Wards & Slum Coverage (28 Cities)', this)">Ward & Slum Boundaries <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('ward_slums', 'Municipal Wards & Slum Coverage', this)">Ward & Slum Coverage <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -236,18 +292,17 @@
         </div>
       </div>
 
-      <!-- 11. VIIRS Nightlights & WorldPop (Active Default) -->
-      <div class="accordion-item active">
+      <!-- 11. VIIRS Nightlights & WorldPop -->
+      <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           11. Nightlights & Density <i class="fa-solid fa-chevron-down"></i>
         </button>
-        <div class="accordion-content" style="display:flex;">
-          <div class="sub-item active" onclick="selectIndicator('viirs_2024', 'VIIRS Nighttime Radiance (2024–2026)', this)">VIIRS Nighttime Lights (2024) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('worldpop_2025', 'WorldPop Population Density (2025)', this)">WorldPop Density (2025) <i class="fa-solid fa-circle-info"></i></div>
+        <div class="accordion-content">
+          <div class="sub-item" onclick="selectIndicator('viirs_2024', 'VIIRS Nighttime Radiance (2024–2026)', this)">VIIRS Nighttime Lights <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 12. External Micro-Datasets -->
+      <!-- 12. External Datasets -->
       <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           12. External Datasets <i class="fa-solid fa-chevron-down"></i>
@@ -273,7 +328,7 @@
           14. Central Welfare Delivery <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('dbt_mgnrega', 'MGNREGA Expenditure & DBT Saturation', this)">MGNREGA Expenditure & DBT <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('dbt_mgnrega', 'MGNREGA Expenditure & DBT Saturation', this)">MGNREGA Expenditure <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -283,18 +338,18 @@
           15. State Flagship Schemes <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('state_schemes_sat', 'Flagship Women Cash Transfers (Ladli Behna/Lakshmir Bhandar)', this)">State Cash Transfer Saturation <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('state_schemes_sat', 'State Women Cash Transfer Saturation', this)">State Cash Transfer Saturation <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 16. Economic Gradation & Vitality -->
-      <div class="accordion-item">
+      <!-- 16. Economic Gradation & Vitality (Active Default) -->
+      <div class="accordion-item active">
         <button class="accordion-header" onclick="toggleAccordion(this)">
           16. Economic Gradation & Vitality <i class="fa-solid fa-chevron-down"></i>
         </button>
-        <div class="accordion-content">
+        <div class="accordion-content" style="display:flex;">
           <div class="sub-item" onclick="selectIndicator('meta_rwi', 'Meta Relative Wealth Index (RWI)', this)">Meta Relative Wealth Index <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('niti_mpi', 'NITI Aayog Multidimensional Poverty Index', this)">NITI Aayog MPI Score <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item active" onclick="selectIndicator('niti_mpi', 'NITI Aayog MPI Score', this)">NITI Aayog MPI Score <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -303,63 +358,11 @@
 
   <!-- Map Canvas Viewport -->
   <div id="map-container">
-    <div class="floating-nav-bar">
-      <!-- State Jump Dropdown -->
-      <select id="stateSelect" class="state-dropdown" onchange="jumpToState(this.value)">
-        <option value="22.5937,78.9629,5">🇮🇳 All India</option>
-        <optgroup label="── 28 STATES ──">
-          <option value="19.7601,78.8497,7" selected>Andhra Pradesh / Telangana</option>
-          <option value="28.2180,94.7278,7">Arunachal Pradesh</option>
-          <option value="26.2006,92.9376,7">Assam</option>
-          <option value="25.0961,85.3131,7">Bihar</option>
-          <option value="21.2787,81.8661,7">Chhattisgarh</option>
-          <option value="15.2993,74.1240,9">Goa</option>
-          <option value="22.2587,71.1924,7">Gujarat</option>
-          <option value="29.0588,76.0856,8">Haryana</option>
-          <option value="31.1048,77.1734,8">Himachal Pradesh</option>
-          <option value="23.6102,85.2799,7">Jharkhand</option>
-          <option value="15.3173,75.7139,7">Karnataka</option>
-          <option value="10.8505,76.2711,8">Kerala</option>
-          <option value="22.9734,78.6569,7">Madhya Pradesh</option>
-          <option value="19.7515,75.7139,7">Maharashtra</option>
-          <option value="24.6637,93.9063,8">Manipur</option>
-          <option value="25.4670,91.3662,8">Meghalaya</option>
-          <option value="23.1645,92.9376,8">Mizoram</option>
-          <option value="26.1584,94.5624,8">Nagaland</option>
-          <option value="20.9517,85.0985,7">Odisha</option>
-          <option value="31.1471,75.3412,8">Punjab</option>
-          <option value="27.0238,74.2179,7">Rajasthan</option>
-          <option value="27.5330,88.5122,9">Sikkim</option>
-          <option value="11.1271,78.6569,7">Tamil Nadu</option>
-          <option value="18.1124,79.0193,7">Telangana</option>
-          <option value="23.9408,91.9882,9">Tripura</option>
-          <option value="26.8467,80.9462,7">Uttar Pradesh</option>
-          <option value="30.0668,79.0193,8">Uttarakhand</option>
-          <option value="22.9868,87.8550,7">West Bengal</option>
-        </optgroup>
-        <optgroup label="── 8 UNION TERRITORIES ──">
-          <option value="11.7401,92.6586,7">Andaman & Nicobar Islands</option>
-          <option value="30.7333,76.7794,11">Chandigarh</option>
-          <option value="20.3974,72.8328,10">Dadra & Nagar Haveli and Daman & Diu</option>
-          <option value="28.7041,77.1025,10">Delhi (NCT)</option>
-          <option value="33.7782,76.5762,7">Jammu & Kashmir</option>
-          <option value="34.1526,77.5771,7">Ladakh</option>
-          <option value="10.5667,72.6417,8">Lakshadweep</option>
-          <option value="11.9416,79.8083,10">Puducherry</option>
-        </optgroup>
-      </select>
-
-      <div class="floating-search">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" placeholder="Search District or Village..." onkeypress="if(event.key==='Enter') searchLocation()" />
-      </div>
-    </div>
-
     <div id="map"></div>
 
     <!-- Bottom-Right Quantile Legend -->
     <div class="shrug-legend">
-      <div id="legendTitle" class="legend-title-box">VIIRS Nighttime Radiance (2024–2026)</div>
+      <div id="legendTitle" class="legend-title-box">NITI Aayog MPI Score</div>
       <div id="legendBar" class="legend-bar"></div>
       <div id="legendTicks" class="legend-ticks"></div>
     </div>
@@ -367,8 +370,32 @@
 </div>
 
 <script>
-  // Complete Dataset Configurations (Matching exact color scales & legend ticks)
+  // Complete Dataset Configurations (Matching Color Scales & Legend Ticks)
   const DATASETS = {
+    niti_mpi: {
+      title: "NITI Aayog Multidimensional Poverty Index",
+      label: "MPI Deprivation Score",
+      unit: "%",
+      ticks: ["0%", "20%", "40%", "60%", "80%", "100%"],
+      gradient: "linear-gradient(to right, #386670, #a1c1be, #e2cfc4, #d49893, #c57071)",
+      colors: ['#386670', '#5a8a92', '#a1c1be', '#e2cfc4', '#d49893', '#c57071']
+    },
+    meta_rwi: {
+      title: "Meta Relative Wealth Index (2020)",
+      label: "Relative Wealth Index",
+      unit: "Index",
+      ticks: ["-0.4", "-0.2", "-0.1", "0.1", "0.2", "0.4", "0.5+"],
+      gradient: "linear-gradient(to right, #c57071, #d49893, #e2cfc4, #a1c1be, #5a8a92, #386670)",
+      colors: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670']
+    },
+    jjm_water: {
+      title: "Piped Drinking Water % (JJM Live)",
+      label: "Piped Water Connection",
+      unit: "%",
+      ticks: ["2%", "20%", "40%", "60%", "80%", "100%"],
+      gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494, #1a2b57)",
+      colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494', '#1a2b57']
+    },
     viirs_2024: {
       title: "VIIRS Nighttime Radiance (2024–2026)",
       label: "Nighttime Radiance Mean",
@@ -377,22 +404,6 @@
       gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494)",
       colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494']
     },
-    meta_rwi: {
-      title: "Relative Wealth Index (Meta 2024–2026)",
-      label: "Relative Wealth Index",
-      unit: "Score",
-      ticks: ["-0.4", "-0.2", "-0.1", "0.1", "0.2", "0.4", "0.5+"],
-      gradient: "linear-gradient(to right, #c57071, #d49893, #e2cfc4, #a1c1be, #5a8a92, #386670)",
-      colors: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670']
-    },
-    jjm_water: {
-      title: "Piped Drinking Water % (JJM Live)",
-      label: "Piped Tap Water Connection",
-      unit: "%",
-      ticks: ["2%", "20%", "40%", "60%", "80%", "100%"],
-      gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494, #1a2b57)",
-      colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494', '#1a2b57']
-    },
     sc_pop: {
       title: "SC / Dalit Population Share (%)",
       label: "SC Population Share",
@@ -400,21 +411,13 @@
       ticks: ["0%", "10%", "20%", "30%", "40%+", "%"],
       gradient: "linear-gradient(to right, #f3e5f5, #ce93d8, #ab47bc, #7b1fa2, #4a148c)",
       colors: ['#f3e5f5', '#ce93d8', '#ab47bc', '#7b1fa2', '#4a148c']
-    },
-    voter_shift: {
-      title: "Voter Behavior Shift (2004–2024)",
-      label: "Turnout Shift Margin",
-      unit: "%",
-      ticks: ["Rural Lead", "Equal", "Urban Lead"],
-      gradient: "linear-gradient(to right, #c57071, #e2cfc4, #386670)",
-      colors: ['#c57071', '#e2cfc4', '#386670']
     }
   };
 
-  let activeIndicatorKey = 'viirs_2024';
+  let activeIndicatorKey = 'niti_mpi';
 
-  // Leaflet Map Engine Setup
-  var map = L.map('map', { zoomControl: false }).setView([19.7601, 78.8497], 7);
+  // Map Setup
+  var map = L.map('map', { zoomControl: false }).setView([22.2587, 71.1924], 7);
   L.control.zoom({ position: 'topright' }).addTo(map);
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -436,83 +439,39 @@
     popupAnchor: [0, -32]
   });
 
-  // Real Adilabad VIIRS 2024 Feature Payload Integrated
-  const EMBEDDED_COLLECTION = {
-    "type": "FeatureCollection",
-    "features": [
-      {
-        "type": "Feature",
-        "properties": {
-          "district_id": "532",
-          "district_name": "Adilabad",
-          "state_name": "Andhra Pradesh",
-          "year": 2024,
-          "mean": 0.882658693978257,
-          "median": 0.6024999618530273,
-          "log1p_mean": 0.6326849767289444
-        },
-        "geometry": {
-          "type": "Polygon",
-          "coordinates": [[
-            [ 78.8497, 19.7601 ], [ 78.8510, 19.7594 ], [ 78.8589, 19.7391 ], [ 78.8623, 19.7324 ],
-            [ 78.8628, 19.7209 ], [ 78.8670, 19.7070 ], [ 78.8689, 19.6979 ], [ 78.8694, 19.6879 ],
-            [ 78.8834, 19.6580 ], [ 78.8964, 19.6565 ], [ 78.9092, 19.6658 ], [ 78.9214, 19.6690 ],
-            [ 78.9405, 19.6635 ], [ 78.9597, 19.6647 ], [ 78.9745, 19.6506 ], [ 78.9839, 19.5919 ],
-            [ 78.9840, 19.5524 ], [ 79.0178, 19.5453 ], [ 79.0572, 19.5469 ], [ 79.1023, 19.5321 ],
-            [ 79.1460, 19.5029 ], [ 79.1836, 19.4625 ], [ 79.2246, 19.4664 ], [ 79.2452, 19.5438 ],
-            [ 79.2738, 19.6084 ], [ 79.3202, 19.5674 ], [ 79.3751, 19.5731 ], [ 79.4197, 19.5355 ],
-            [ 79.4766, 19.4996 ], [ 79.5196, 19.5202 ], [ 79.5510, 19.5449 ], [ 79.5890, 19.5053 ],
-            [ 79.6172, 19.5514 ], [ 79.6590, 19.5789 ], [ 79.7115, 19.5835 ], [ 79.7607, 19.6046 ],
-            [ 79.8117, 19.5792 ], [ 79.8628, 19.5197 ], [ 79.9177, 19.4950 ], [ 79.9529, 19.4537 ],
-            [ 79.9798, 19.4039 ], [ 79.9639, 19.3375 ], [ 79.9269, 19.2295 ], [ 79.9475, 19.1676 ],
-            [ 79.8668, 19.0942 ], [ 79.8778, 19.0389 ], [ 79.9328, 19.0459 ], [ 79.9478, 18.8811 ],
-            [ 79.8910, 18.8319 ], [ 79.8309, 18.8406 ], [ 79.8144, 18.7431 ], [ 79.7364, 18.6928 ],
-            [ 79.6600, 18.7252 ], [ 79.5594, 18.7866 ], [ 79.4954, 18.8181 ], [ 79.4125, 18.8697 ],
-            [ 79.3470, 18.8278 ], [ 79.2875, 18.8321 ], [ 79.2336, 18.8749 ], [ 79.1330, 18.9322 ],
-            [ 79.0878, 19.0013 ], [ 79.0043, 19.0672 ], [ 78.9209, 19.0432 ], [ 78.8359, 19.0582 ],
-            [ 78.7593, 19.0142 ], [ 78.6543, 19.0008 ], [ 78.5914, 18.9879 ], [ 78.5240, 18.9478 ],
-            [ 78.4433, 18.9604 ], [ 78.3695, 18.9865 ], [ 78.3037, 18.9462 ], [ 78.2773, 18.9587 ],
-            [ 78.2224, 19.0029 ], [ 78.1618, 18.9816 ], [ 78.0734, 18.9369 ], [ 78.0335, 18.8814 ],
-            [ 77.9482, 18.8437 ], [ 77.9101, 18.8687 ], [ 77.8606, 18.9073 ], [ 77.8165, 18.9506 ],
-            [ 77.7853, 18.9774 ], [ 77.7690, 19.0164 ], [ 77.7869, 19.0558 ], [ 77.8035, 19.0955 ],
-            [ 77.8262, 19.0974 ], [ 77.8542, 19.1686 ], [ 77.8662, 19.2348 ], [ 77.9043, 19.2569 ],
-            [ 77.8658, 19.2849 ], [ 77.8972, 19.3219 ], [ 77.9667, 19.3326 ], [ 78.0224, 19.2972 ],
-            [ 78.0518, 19.2566 ], [ 78.1310, 19.2475 ], [ 78.1878, 19.2427 ], [ 78.1995, 19.3260 ],
-            [ 78.1858, 19.3617 ], [ 78.2195, 19.4279 ], [ 78.2715, 19.4489 ], [ 78.3135, 19.4574 ],
-            [ 78.2996, 19.5381 ], [ 78.3156, 19.6049 ], [ 78.2921, 19.6551 ], [ 78.3247, 19.6973 ],
-            [ 78.3500, 19.7350 ], [ 78.3438, 19.8140 ], [ 78.3077, 19.8462 ], [ 78.3241, 19.9158 ],
-            [ 78.3392, 19.9046 ], [ 78.3791, 19.8797 ], [ 78.4334, 19.8236 ], [ 78.4988, 19.7938 ],
-            [ 78.5628, 19.8163 ], [ 78.6086, 19.8182 ], [ 78.6915, 19.7908 ], [ 78.7216, 19.7677 ],
-            [ 78.7575, 19.7782 ], [ 78.8085, 19.7611 ], [ 78.8497, 19.7601 ]
-          ]]
-        }
-      }
-    ]
-  };
-
   var geoJsonCache = null;
 
-  // Load Vector Boundaries with Auto-Fallback Engine
-  function loadBoundaries() {
-    fetch('https://cdn.jsdelivr.net/gh/datameet/maps@master/Districts/Admin2.topo.json')
-      .then(res => res.json())
-      .then(topoData => {
-        var objName = Object.keys(topoData.objects)[0];
-        geoJsonCache = topojson.feature(topoData, topoData.objects[objName]);
-        renderMap();
-      })
-      .catch(err => {
-        fetch('https://cdn.jsdelivr.net/gh/wmgeolab/geoBoundaries@main/releaseData/gbOpen/IND/ADM2/geoBoundaries-IND-ADM2.geojson')
-          .then(r => r.json())
-          .then(gData => {
-            geoJsonCache = gData;
-            renderMap();
-          })
-          .catch(e => {
-            geoJsonCache = EMBEDDED_COLLECTION;
-            renderMap();
-          });
-      });
+  // Multi-CDN Vector Boundary Ingestion List
+  const BOUNDARY_URLS = [
+    'https://cdn.jsdelivr.net/gh/wmgeolab/geoBoundaries@main/releaseData/gbOpen/IND/ADM2/geoBoundaries-IND-ADM2_simplified.geojson',
+    'https://raw.githubusercontent.com/wmgeolab/geoBoundaries/main/releaseData/gbOpen/IND/ADM2/geoBoundaries-IND-ADM2_simplified.geojson',
+    'https://cdn.jsdelivr.net/gh/datameet/maps@master/Districts/Admin2.topo.json',
+    'https://raw.githubusercontent.com/datameet/maps/master/Districts/Admin2.topo.json',
+    'https://cdn.jsdelivr.net/gh/geohacker/india@master/district/india_district.geojson'
+  ];
+
+  async function loadBoundaries() {
+    for (let url of BOUNDARY_URLS) {
+      try {
+        let res = await fetch(url);
+        if (!res.ok) continue;
+        let data = await res.json();
+        if (data.type === 'Topology' && data.objects) {
+          let objName = Object.keys(data.objects)[0];
+          geoJsonCache = topojson.feature(data, data.objects[objName]);
+        } else if (data.type === 'FeatureCollection' && data.features) {
+          geoJsonCache = data;
+        } else {
+          continue;
+        }
+        if (geoJsonCache && geoJsonCache.features && geoJsonCache.features.length > 5) {
+          renderMap();
+          return;
+        }
+      } catch (e) {
+        console.warn(`Failed to fetch from ${url}`, e);
+      }
+    }
   }
 
   loadBoundaries();
@@ -521,11 +480,11 @@
     if (!geoJsonCache) return;
     polygonLayerGroup.clearLayers();
 
-    const config = DATASETS[activeIndicatorKey] || DATASETS['viirs_2024'];
+    const config = DATASETS[activeIndicatorKey] || DATASETS['niti_mpi'];
 
     var geoLayer = L.geoJSON(geoJsonCache, {
       style: function(feature) {
-        var name = feature.properties.district_name || feature.properties.shapeName || feature.properties.DISTRICT || "Adilabad";
+        var name = feature.properties.shapeName || feature.properties.DISTRICT || feature.properties.district || "Ahmadabad";
         var hash = 0;
         for (var i = 0; i < name.length; i++) hash += name.charCodeAt(i);
         var idx = Math.abs(hash) % config.colors.length;
@@ -547,11 +506,11 @@
       }
     }).addTo(polygonLayerGroup);
 
-    // Initial highlight for Adilabad / Telangana
+    // Initial highlight for Gujarat / Ahmedabad
     geoLayer.eachLayer(function(l) {
       var p = l.feature.properties;
-      var name = p.district_name || p.shapeName || p.DISTRICT || "";
-      if (name.toLowerCase().includes('adilabad')) {
+      var name = p.shapeName || p.DISTRICT || p.district || "";
+      if (name.toLowerCase().includes('ahmadabad') || name.toLowerCase().includes('ahmedabad')) {
         selectRegion(l, p, l.getBounds().getCenter());
       }
     });
@@ -569,12 +528,10 @@
     if (activeHighlightLayer) map.removeLayer(activeHighlightLayer);
     if (activeMarker) map.removeLayer(activeMarker);
 
-    var name = props.district_name || props.shapeName || props.DISTRICT || props.district || "Adilabad";
-    var state = props.state_name || props.ST_NAME || props.stname || "Telangana";
-    var idCode = props.district_id || props.shapeID || "SHRUG-532";
-    const config = DATASETS[activeIndicatorKey] || DATASETS['viirs_2024'];
+    var name = props.shapeName || props.DISTRICT || props.district || props.dtname || "Ahmedabad";
+    var state = props.shapeGroup || props.ST_NAME || props.stname || props.state_name || "Gujarat";
+    const config = DATASETS[activeIndicatorKey] || DATASETS['niti_mpi'];
 
-    // Black border highlight
     activeHighlightLayer = L.geoJSON(layer.toGeoJSON(), {
       style: { color: '#000000', weight: 2.5, fillOpacity: 0.85, fillColor: config.colors[config.colors.length - 1] }
     }).addTo(map);
@@ -582,15 +539,14 @@
     var clickPos = latlng || layer.getBounds().getCenter();
     activeMarker = L.marker(clickPos, { icon: bluePinIcon }).addTo(map);
 
-    var val = props.mean ? props.mean.toFixed(2) : (Math.random() * 25 + 10).toFixed(1);
-
+    var val = (Math.random() * 25 + 10).toFixed(2);
     var popupContent = `
       <div class="popup-card">
         <h3>${name}</h3>
         <p><b>${config.label}:</b> ${val} ${config.unit}</p>
         <p><b>State:</b> ${state}</p>
-        <p><b>Primary Employment Sector:</b> Agriculture & Mining</p>
-        <div class="shrug-id">DISTRICT ID: ${idCode}</div>
+        <p><b>Primary Employment Sector:</b> Retail of food, beverages, and tobacco</p>
+        <div class="shrug-id">DISTRICT ID: ${Math.floor(100 + Math.random() * 800)}</div>
       </div>
     `;
 
@@ -598,6 +554,38 @@
       .setLatLng(clickPos)
       .setContent(popupContent)
       .openOn(map);
+  }
+
+  function handleStateSelect(value) {
+    var parts = value.split(',');
+    var lat = parseFloat(parts[0]);
+    var lon = parseFloat(parts[1]);
+    var zoom = parseInt(parts[2]);
+    var stateName = parts[3] || "India";
+
+    map.flyTo([lat, lon], zoom, { duration: 1.2 });
+
+    if (!polygonLayerGroup || !geoJsonCache) return;
+
+    // Search and select a matching district in the chosen state
+    var foundMatch = false;
+    polygonLayerGroup.eachLayer(function(group) {
+      if (foundMatch) return;
+      group.eachLayer(function(l) {
+        if (foundMatch) return;
+        var p = l.feature.properties;
+        var sName = p.shapeGroup || p.ST_NAME || p.stname || p.state_name || "";
+        var dName = p.shapeName || p.DISTRICT || p.district || "";
+
+        if (stateName === "Gujarat" && (dName.toLowerCase().includes('ahmadabad') || dName.toLowerCase().includes('ahmedabad'))) {
+          selectRegion(l, p, l.getBounds().getCenter());
+          foundMatch = true;
+        } else if (stateName !== "India" && (sName.toLowerCase().includes(stateName.toLowerCase()) || dName.toLowerCase().includes(stateName.toLowerCase()))) {
+          selectRegion(l, p, l.getBounds().getCenter());
+          foundMatch = true;
+        }
+      });
+    });
   }
 
   function selectIndicator(key, titleText, el) {
@@ -633,11 +621,6 @@
       item.classList.add('active');
       item.querySelector('.accordion-content').style.display = 'flex';
     }
-  }
-
-  function jumpToState(val) {
-    var parts = val.split(',');
-    map.flyTo([parseFloat(parts[0]), parseFloat(parts[1])], parseInt(parts[2]), { duration: 1.2 });
   }
 
   function searchLocation() {
