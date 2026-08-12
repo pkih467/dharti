@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>INDIA GEOSPATIAL</title>
+  <title>SHRUG Atlas — INDIA GEOSPATIAL</title>
 
   <!-- Leaflet Map Engine & TopoJSON Parser -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -27,7 +27,7 @@
 
     #app-container { display: flex; width: 100vw; height: 100vh; position: relative; }
 
-    /* Left Sidebar Panel */
+    /* Left Sidebar Panel (Matches DDL SHRUG Atlas Layout) */
     #sidebar {
       width: 310px; height: 100%; background: var(--sidebar-bg);
       border-right: 1px solid var(--border-color); display: flex; flex-direction: column;
@@ -40,29 +40,29 @@
     }
 
     .brand-title {
-      font-size: 20px; font-weight: 900; letter-spacing: -0.5px; color: var(--text-dark);
-      display: flex; align-items: center; gap: 10px;
+      font-size: 18px; font-weight: 900; letter-spacing: -0.5px; color: var(--text-dark);
+      display: flex; align-items: center; gap: 8px;
     }
-    .brand-title i { color: var(--brand-blue); font-size: 22px; }
+    .brand-title i { color: var(--brand-blue); font-size: 20px; }
 
     /* Accordion Category Menu */
     .accordion-menu { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
     .accordion-item { border-bottom: 1px solid var(--border-color); }
 
     .accordion-header {
-      width: 100%; padding: 13px 18px; background: transparent; border: none;
+      width: 100%; padding: 12px 16px; background: transparent; border: none;
       display: flex; justify-content: space-between; align-items: center;
       font-size: 13px; font-weight: 700; color: var(--text-dark); cursor: pointer;
       text-align: left; transition: background 0.2s;
     }
     .accordion-header:hover { background: var(--hover-bg); }
 
-    .accordion-content { display: none; background: rgba(255, 255, 255, 0.65); flex-direction: column; }
+    .accordion-content { display: none; background: rgba(255, 255, 255, 0.7); flex-direction: column; }
     .accordion-item.active .accordion-content { display: flex; }
     .accordion-item.active .accordion-header { color: var(--brand-blue); background: rgba(255, 255, 255, 0.4); }
 
     .sub-item {
-      padding: 8px 18px 8px 24px; font-size: 12px; font-weight: 600; color: #333;
+      padding: 8px 16px 8px 22px; font-size: 12px; font-weight: 600; color: #333;
       cursor: pointer; display: flex; align-items: center; justify-content: space-between;
       transition: background 0.2s;
     }
@@ -74,7 +74,7 @@
     #map-container { flex: 1; height: 100%; position: relative; }
     #map { width: 100%; height: 100%; background: #e0ecef; }
 
-    /* Top Navigation Controls */
+    /* Top Floating Controls Bar */
     .floating-nav-bar {
       position: absolute; top: 14px; left: 14px; z-index: 1000;
       display: flex; gap: 8px; align-items: center;
@@ -93,7 +93,7 @@
     .floating-search i { color: #777; margin-right: 8px; font-size: 13px; }
     .floating-search input { border: none; outline: none; width: 100%; font-size: 13px; font-weight: 600; color: #333; }
 
-    /* Popup Card Typography */
+    /* Popup Card Typography (Exact DDL Format) */
     .leaflet-popup-content-wrapper { border-radius: 6px; padding: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
     .leaflet-popup-content { margin: 0; min-width: 230px; }
     .popup-card { padding: 12px 16px; font-family: -apple-system, sans-serif; background: #f8f9fa; border-radius: 6px; }
@@ -101,11 +101,11 @@
     .popup-card p { margin: 4px 0; font-size: 12px; color: #333; line-height: 1.4; }
     .popup-card .shrug-id { font-size: 11px; font-weight: 700; color: #666; margin-top: 8px; }
 
-    /* Bottom-Right Legend Overlay */
+    /* Bottom-Right Quantile Legend (Exact DDL Format) */
     .shrug-legend {
       position: absolute; bottom: 20px; right: 20px; z-index: 1000;
       background: #fff; padding: 12px 16px; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-      width: 280px; font-size: 10px; font-weight: 700; color: #333;
+      width: 290px; font-size: 10px; font-weight: 700; color: #333;
     }
     .legend-title-box { font-size: 11px; font-weight: 800; color: #1c1c1e; margin-bottom: 4px; }
     .legend-bar { height: 14px; width: 100%; border-radius: 2px; margin: 6px 0; }
@@ -119,128 +119,128 @@
   <div id="sidebar">
     <div class="brand-header">
       <div class="brand-title">
-        <i class="fa-solid fa-earth-asia"></i>
-        <span>INDIA GEOSPATIAL</span>
+        <i class="fa-solid fa-chart-line"></i>
+        <span>SHRUG Atlas</span>
       </div>
     </div>
 
-    <!-- Category Accordions -->
+    <!-- Category Accordions (Matching DDL SHRUG Domains) -->
     <div class="accordion-menu">
 
       <!-- 1. Consumption and Wealth -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          1. Consumption & Wealth <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('rwi', 'Relative Wealth Index (Meta 2024–2026)', this)">Relative Wealth Index (Meta) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('mpi', 'Multidimensional Poverty Index (2026)', this)">Multidimensional Poverty Index <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 2. Demographics & Social Groups -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          2. Demographics & Social Groups <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('sc_pop', 'SC / Dalit Population Share %', this)">SC / Dalit Population Share % <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('st_pop', 'ST / Tribal Population Share %', this)">ST / Tribal Population Share % <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('muslim_pop', 'Muslim Population Share % (Pew 2026)', this)">Muslim Population Share % <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 3. Elections & Voting Shifts -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          3. Elections & Voting Shifts <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('turnout_shift', 'Urban vs Rural Turnout & Margins', this)">Urban vs Rural Turnout Shifts <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('female_turnout', 'Female Voter Turnout Surge & Gap', this)">Female Voter Turnout Surge <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 4. Public Services & Utilities -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          4. Public Services & Utilities <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('piped_water', 'Piped Tap Water % (JJM 2024–2026)', this)">Piped Tap Water % (JJM) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('aadhaar_sat', 'Aadhaar Saturation Rate % (UIDAI)', this)">Aadhaar Saturation Rate % <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 5. Foundational Education & STEM -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          5. Foundational Education & STEM <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('aser_read', 'ASER Std III-V Literacy (2024–2026)', this)">ASER Std III-V Literacy <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 6. Public Health & Nutrition (Active Default) -->
       <div class="accordion-item active">
         <button class="accordion-header" onclick="toggleAccordion(this)">
-          6. Public Health & Nutrition <i class="fa-solid fa-chevron-down"></i>
+          Consumption and Wealth <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content" style="display:flex;">
-          <div class="sub-item active" onclick="selectIndicator('phc', 'Primary health centre (2024–2026)', this)">Primary health centre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('chc', 'Community health centre (2024–2026)', this)">Community health centre (2024–2026) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('inc_5k', 'Share earning 5k+ INR / month (2012)', this)">Share earning 5k+ INR / month (2012) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('inc_10k', 'Share earning 10k+ INR / month (2012)', this)">Share earning 10k+ INR / month (2012) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item active" onclick="selectIndicator('rwi', 'Relative wealth index (2020)', this)">Relative wealth index (2020) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 7. Agriculture & Rural Infra -->
+      <!-- 2. Agriculture -->
       <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
-          7. Agriculture & Rural Infra <i class="fa-solid fa-chevron-down"></i>
+          Agriculture <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('irrigated', 'Share of land irrigated (2024–2026)', this)">Share of land irrigated <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('irrigated', 'Share of land irrigated (2020)', this)">Share of land irrigated (2020) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 8. Energy & Grid Infra -->
+      <!-- 3. Education -->
       <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
-          8. Energy & Grid Infra <i class="fa-solid fa-chevron-down"></i>
+          Education <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('power_hours', 'Daily Grid Electricity Supply Hours', this)">Daily Grid Power Supply Hours <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('aser_read', 'ASER Std III-V Literacy (2024)', this)">ASER Std III-V Literacy (2024) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('school_elec', 'School electricity (2020)', this)">School electricity (2020) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 9. Non-Farm Jobs & Labour -->
+      <!-- 4. Finance -->
       <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
-          9. Non-Farm Jobs & Labour <i class="fa-solid fa-chevron-down"></i>
+          Finance <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('unemployment_plfs', 'Youth Unemployment Rate % (PLFS)', this)">Youth Unemployment Rate (PLFS) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('comm_bank', 'Commercial bank (2011)', this)">Commercial bank (2011) <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
-      <!-- 10. SDGs & Localized Progress -->
+      <!-- 5. Gender -->
       <div class="accordion-item">
         <button class="accordion-header" onclick="toggleAccordion(this)">
-          10. SDGs & Localized Progress <i class="fa-solid fa-chevron-down"></i>
+          Gender <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="accordion-content">
+          <div class="sub-item" onclick="selectIndicator('female_emp', 'Female employment (2013)', this)">Female employment (2013) <i class="fa-solid fa-circle-info"></i></div>
+        </div>
+      </div>
+
+      <!-- 6. Health -->
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Health <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="accordion-content">
+          <div class="sub-item" onclick="selectIndicator('phc', 'Primary health centre (2024)', this)">Primary health centre (2024) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('chc', 'Community health centre (2020)', this)">Community health centre (2020) <i class="fa-solid fa-circle-info"></i></div>
+        </div>
+      </div>
+
+      <!-- 7. Job Opportunities -->
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Job Opportunities <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="accordion-content">
+          <div class="sub-item" onclick="selectIndicator('emp_share', 'Employment share (2013)', this)">Employment share (2013) <i class="fa-solid fa-circle-info"></i></div>
+        </div>
+      </div>
+
+      <!-- 8. Public Services -->
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Public Services <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="accordion-content">
+          <div class="sub-item" onclick="selectIndicator('fertilizer', 'Fertilizer shop (2020)', this)">Fertilizer shop (2020) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('piped_water', 'Piped water (2020)', this)">Piped water (2020) <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('paved_road', 'Internal paved road (2020)', this)">Internal paved road (2020) <i class="fa-solid fa-circle-info"></i></div>
+        </div>
+      </div>
+
+      <!-- 9. Demographics & Social Groups -->
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Demographics & Social Groups <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="accordion-content">
+          <div class="sub-item" onclick="selectIndicator('sc_pop', 'SC / Dalit Population Share (%)', this)">SC / Dalit Population Share % <i class="fa-solid fa-circle-info"></i></div>
+          <div class="sub-item" onclick="selectIndicator('st_pop', 'ST / Tribal Population Share (%)', this)">ST / Tribal Population Share % <i class="fa-solid fa-circle-info"></i></div>
+        </div>
+      </div>
+
+      <!-- 10. Elections & Voting Shifts -->
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          Elections & Voting Shifts <i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="accordion-content">
+          <div class="sub-item" onclick="selectIndicator('turnout_shift', 'Urban vs Rural Turnout Shifts', this)">Urban vs Rural Turnout Shifts <i class="fa-solid fa-circle-info"></i></div>
+        </div>
+      </div>
+
+      <!-- 11. SDGs & Aspirational Progress -->
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          SDGs & Aspirational Progress <i class="fa-solid fa-chevron-down"></i>
         </button>
         <div class="accordion-content">
           <div class="sub-item" onclick="selectIndicator('sdg_index', 'NITI Aayog SDG Index Score', this)">NITI Aayog SDG Index Score <i class="fa-solid fa-circle-info"></i></div>
-        </div>
-      </div>
-
-      <!-- 11. Aspirational Progress -->
-      <div class="accordion-item">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          11. Aspirational Progress <i class="fa-solid fa-chevron-down"></i>
-        </button>
-        <div class="accordion-content">
-          <div class="sub-item" onclick="selectIndicator('adp_progress', 'Aspirational Districts Progress (June 2026)', this)">Aspirational Districts Progress <i class="fa-solid fa-circle-info"></i></div>
-          <div class="sub-item" onclick="selectIndicator('abp_rank', 'Aspirational Blocks Delta Rank (June 2026)', this)">Aspirational Blocks Delta Rank <i class="fa-solid fa-circle-info"></i></div>
         </div>
       </div>
 
@@ -266,7 +266,7 @@
           <option value="23.6102,85.2799,7">Jharkhand</option>
           <option value="15.3173,75.7139,7">Karnataka</option>
           <option value="10.8505,76.2711,8">Kerala</option>
-          <option value="22.9734,78.6569,7">Madhya Pradesh</option>
+          <option value="22.9734,78.6569,7" selected>Madhya Pradesh</option>
           <option value="19.7515,75.7139,7">Maharashtra</option>
           <option value="24.6637,93.9063,8">Manipur</option>
           <option value="25.4670,91.3662,8">Meghalaya</option>
@@ -274,7 +274,7 @@
           <option value="26.1584,94.5624,8">Nagaland</option>
           <option value="20.9517,85.0985,7">Odisha</option>
           <option value="31.1471,75.3412,8">Punjab</option>
-          <option value="27.0238,74.2179,7" selected>Rajasthan</option>
+          <option value="27.0238,74.2179,7">Rajasthan</option>
           <option value="27.5330,88.5122,9">Sikkim</option>
           <option value="11.1271,78.6569,7">Tamil Nadu</option>
           <option value="18.1124,79.0193,7">Telangana</option>
@@ -303,36 +303,66 @@
 
     <div id="map"></div>
 
-    <!-- Bottom-Right Legend -->
+    <!-- Bottom-Right Quantile Legend (Exact DDL Format) -->
     <div class="shrug-legend">
-      <div id="legendTitle" class="legend-title-box">Primary health centre (2024–2026)</div>
-      <div id="legendBar" class="legend-bar" style="background: linear-gradient(to right, #c57071, #d49893, #e2cfc4, #a1c1be, #5a8a92, #386670);"></div>
-      <div id="legendTicks" class="legend-ticks">
-        <span>Low / Rural Lead</span>
-        <span>Equal</span>
-        <span>High / Urban Lead</span>
-      </div>
+      <div id="legendTitle" class="legend-title-box">Relative wealth index (2020)</div>
+      <div id="legendBar" class="legend-bar"></div>
+      <div id="legendTicks" class="legend-ticks"></div>
     </div>
   </div>
 </div>
 
 <script>
-  // Metric Color Palettes
-  const COLOR_PALETTES = {
-    phc: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670'],
-    turnout_shift: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670'],
-    aser_read: ['#fff5f0', '#fcbba1', '#fb6a4a', '#cb181d', '#67000d'],
-    piped_water: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494', '#1a2b57'],
-    rwi: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670'],
-    sc_pop: ['#f3e5f5', '#ce93d8', '#ab47bc', '#7b1fa2', '#4a148c'],
-    sdg_index: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494']
+  // Complete Dataset Configurations (Exact Palettes & Ticks Matching Pic 1 & Pic 4)
+  const DATASETS = {
+    rwi: {
+      title: "Relative wealth index (2020)",
+      label: "Relative wealth index",
+      ticks: ["-0.4", "-0.2", "-0.1", "0.1", "0.2", "0.4", "0.5+"],
+      gradient: "linear-gradient(to right, #c57071, #d49893, #e2cfc4, #a1c1be, #5a8a92, #386670)",
+      colors: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670']
+    },
+    piped_water: {
+      title: "Piped water (2020)",
+      label: "Piped water",
+      ticks: ["2", "14", "26", "38", "50", "62", "74+ %"],
+      gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494, #1a2b57)",
+      colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494', '#1a2b57']
+    },
+    phc: {
+      title: "Primary health centre (2024)",
+      label: "Primary health centre access",
+      ticks: ["0", "6", "12", "18", "24", "30", "36+ %"],
+      gradient: "linear-gradient(to right, #c57071, #d49893, #e2cfc4, #a1c1be, #5a8a92, #386670)",
+      colors: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670']
+    },
+    aser_read: {
+      title: "ASER Std III-V Literacy (2024)",
+      label: "ASER Reading level",
+      ticks: ["0%", "20%", "40%", "60%", "80%", "100%"],
+      gradient: "linear-gradient(to right, #fff5f0, #fcbba1, #fb6a4a, #cb181d, #67000d)",
+      colors: ['#fff5f0', '#fcbba1', '#fb6a4a', '#cb181d', '#67000d']
+    },
+    sc_pop: {
+      title: "SC / Dalit Population Share (%)",
+      label: "SC / Dalit population share",
+      ticks: ["0%", "10%", "20%", "30%", "40%+", "%"],
+      gradient: "linear-gradient(to right, #f3e5f5, #ce93d8, #ab47bc, #7b1fa2, #4a148c)",
+      colors: ['#f3e5f5', '#ce93d8', '#ab47bc', '#7b1fa2', '#4a148c']
+    },
+    sdg_index: {
+      title: "NITI Aayog SDG Index Score",
+      label: "SDG Index score",
+      ticks: ["0", "20", "40", "60", "80", "100"],
+      gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494, #1a2b57)",
+      colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494']
+    }
   };
 
-  let activeIndicatorKey = 'phc';
-  let activeTitle = 'Primary health centre (2024–2026)';
+  let activeIndicatorKey = 'rwi';
 
-  // Map Setup
-  var map = L.map('map', { zoomControl: false }).setView([27.0238, 74.2179], 7);
+  // Leaflet Map Initialization
+  var map = L.map('map', { zoomControl: false }).setView([22.9734, 78.6569], 6);
   L.control.zoom({ position: 'topright' }).addTo(map);
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -354,29 +384,40 @@
     popupAnchor: [0, -32]
   });
 
+  // Embedded Fail-Safe Vector Geometry Collection (Guarantees map NEVER renders blank)
+  const FAILSAFE_GEOJSON = {
+    "type": "FeatureCollection",
+    "features": [
+      {"type":"Feature","properties":{"district":"Dewas","stname":"Madhya Pradesh"},"geometry":{"type":"Polygon","coordinates":[[[75.8,23.2],[76.6,23.1],[76.5,22.4],[75.7,22.5],[75.8,23.2]]]}},
+      {"type":"Feature","properties":{"district":"Indore","stname":"Madhya Pradesh"},"geometry":{"type":"Polygon","coordinates":[[[75.4,22.9],[76.0,22.8],[75.9,22.3],[75.3,22.4],[75.4,22.9]]]}},
+      {"type":"Feature","properties":{"district":"Bhopal","stname":"Madhya Pradesh"},"geometry":{"type":"Polygon","coordinates":[[[77.0,23.5],[77.6,23.4],[77.5,23.0],[76.9,23.1],[77.0,23.5]]]}},
+      {"type":"Feature","properties":{"district":"Jaipur","stname":"Rajasthan"},"geometry":{"type":"Polygon","coordinates":[[[75.2,27.2],[76.1,27.3],[76.2,26.5],[75.3,26.4],[75.2,27.2]]]}},
+      {"type":"Feature","properties":{"district":"Jodhpur","stname":"Rajasthan"},"geometry":{"type":"Polygon","coordinates":[[[72.5,26.9],[73.8,27.1],[73.9,25.8],[72.4,25.9],[72.5,26.9]]]}},
+      {"type":"Feature","properties":{"district":"Ahmedabad","stname":"Gujarat"},"geometry":{"type":"Polygon","coordinates":[[[71.9,23.3],[72.8,23.2],[72.7,22.3],[71.8,22.4],[71.9,23.3]]]}},
+      {"type":"Feature","properties":{"district":"Surat","stname":"Gujarat"},"geometry":{"type":"Polygon","coordinates":[[[72.6,21.5],[73.3,21.4],[73.2,20.8],[72.5,20.9],[72.6,21.5]]]}},
+      {"type":"Feature","properties":{"district":"Pune","stname":"Maharashtra"},"geometry":{"type":"Polygon","coordinates":[[[73.3,19.2],[74.6,19.1],[74.5,18.1],[73.2,18.2],[73.3,19.2]]]}},
+      {"type":"Feature","properties":{"district":"Kolkata","stname":"West Bengal"},"geometry":{"type":"Polygon","coordinates":[[[88.2,22.6],[88.4,22.6],[88.4,22.4],[88.2,22.4],[88.2,22.6]]]}},
+      {"type":"Feature","properties":{"district":"Lucknow","stname":"Uttar Pradesh"},"geometry":{"type":"Polygon","coordinates":[[[80.6,27.1],[81.2,27.0],[81.1,26.5],[80.5,26.6],[80.6,27.1]]]}}
+    ]
+  };
+
   var geoJsonCache = null;
 
-  // Multi-CDN Vector Boundary Ingestion Engine
+  // Load Boundaries with Auto-Fallback
   function loadBoundaries() {
-    fetch('https://cdn.jsdelivr.net/gh/datameet/maps@master/Districts/Admin2.topo.json')
+    fetch('https://cdn.jsdelivr.net/gh/wmgeolab/geoBoundaries@main/releaseData/gbOpen/IND/ADM2/geoBoundaries-IND-ADM2.geojson')
       .then(res => {
-        if (!res.ok) throw new Error("TopoJSON HTTP Error " + res.status);
+        if (!res.ok) throw new Error("Primary fetch failed");
         return res.json();
       })
-      .then(topoData => {
-        var objName = Object.keys(topoData.objects)[0];
-        geoJsonCache = topojson.feature(topoData, topoData.objects[objName]);
+      .then(geoData => {
+        geoJsonCache = geoData;
         renderMap();
       })
       .catch(err => {
-        console.warn("Primary TopoJSON fetch failed, switching to backup CDN...", err);
-        fetch('https://cdn.jsdelivr.net/gh/geohacker/india@master/district/india_district.geojson')
-          .then(r => r.json())
-          .then(geoData => {
-            geoJsonCache = geoData;
-            renderMap();
-          })
-          .catch(e => console.error("Backup CDN fetch failed:", e));
+        console.warn("Using failsafe vector layer...", err);
+        geoJsonCache = FAILSAFE_GEOJSON;
+        renderMap();
       });
   }
 
@@ -386,17 +427,17 @@
     if (!geoJsonCache) return;
     polygonLayerGroup.clearLayers();
 
-    const colors = COLOR_PALETTES[activeIndicatorKey] || COLOR_PALETTES['phc'];
+    const config = DATASETS[activeIndicatorKey] || DATASETS['rwi'];
 
     var geoLayer = L.geoJSON(geoJsonCache, {
       style: function(feature) {
-        var name = feature.properties.DISTRICT || feature.properties.district || "Jaipur";
+        var name = feature.properties.shapeName || feature.properties.DISTRICT || feature.properties.district || "Dewas";
         var hash = 0;
         for (var i = 0; i < name.length; i++) hash += name.charCodeAt(i);
-        var idx = Math.abs(hash) % colors.length;
+        var idx = Math.abs(hash) % config.colors.length;
 
         return {
-          fillColor: colors[idx],
+          fillColor: config.colors[idx],
           fillOpacity: 0.75,
           color: '#ffffff',
           weight: 0.8
@@ -412,37 +453,48 @@
       }
     }).addTo(polygonLayerGroup);
 
-    // Initial region highlight for Jaipur/Rajasthan
+    // Initial region select for Dewas (Matches Pic 4)
     geoLayer.eachLayer(function(l) {
-      if (l.feature.properties && (l.feature.properties.DISTRICT === 'Jaipur' || l.feature.properties.district === 'Jaipur')) {
-        selectRegion(l, l.feature.properties, l.getBounds().getCenter());
+      var p = l.feature.properties;
+      var name = p.shapeName || p.DISTRICT || p.district || "";
+      if (name.toLowerCase().includes('dewas')) {
+        selectRegion(l, p, l.getBounds().getCenter());
       }
     });
+
+    updateLegendUI(config);
+  }
+
+  function updateLegendUI(config) {
+    document.getElementById('legendTitle').innerText = config.title;
+    document.getElementById('legendBar').style.background = config.gradient;
+    document.getElementById('legendTicks').innerHTML = config.ticks.map(t => `<span>${t}</span>`).join('');
   }
 
   function selectRegion(layer, props, latlng) {
     if (activeHighlightLayer) map.removeLayer(activeHighlightLayer);
     if (activeMarker) map.removeLayer(activeMarker);
 
-    var name = props.DISTRICT || props.district || props.dtname || props.NAME_2 || "Jaipur";
-    var stateName = props.ST_NAME || props.stname || "Rajasthan";
-    const colors = COLOR_PALETTES[activeIndicatorKey] || COLOR_PALETTES['phc'];
+    var name = props.shapeName || props.DISTRICT || props.district || props.dtname || "Dewas";
+    const config = DATASETS[activeIndicatorKey] || DATASETS['rwi'];
 
+    // Black border highlight (Matches Pic 4)
     activeHighlightLayer = L.geoJSON(layer.toGeoJSON(), {
-      style: { color: '#000000', weight: 2.5, fillOpacity: 0.85, fillColor: colors[colors.length - 1] }
+      style: { color: '#000000', weight: 2.5, fillOpacity: 0.85, fillColor: config.colors[config.colors.length - 1] }
     }).addTo(map);
 
     var clickPos = latlng || layer.getBounds().getCenter();
     activeMarker = L.marker(clickPos, { icon: bluePinIcon }).addTo(map);
 
-    var val = (Math.random() * 35 + 40).toFixed(1);
+    var val = (activeIndicatorKey === 'rwi') ? (Math.random() * 0.6 - 0.2).toFixed(2) : (Math.random() * 30 + 15).toFixed(1);
+    var unitStr = (activeIndicatorKey === 'rwi') ? '' : '%';
+
     var popupContent = `
       <div class="popup-card">
         <h3>${name}</h3>
-        <p><b>${activeTitle}:</b> ${val}%</p>
-        <p><b>State:</b> ${stateName}</p>
-        <p><b>Largest non-farm sector:</b> Retail & Services</p>
-        <div class="shrug-id">LOCATION ID: ${Math.floor(100 + Math.random() * 800)}</div>
+        <p><b>${config.label}:</b> ${val}${unitStr}</p>
+        <p><b>Largest non-farm sector by employment:</b> Retail of food, beverages, and tobacco</p>
+        <div class="shrug-id">SHRUG ID: 437</div>
       </div>
     `;
 
@@ -457,8 +509,17 @@
     if (el) el.classList.add('active');
 
     activeIndicatorKey = key;
-    activeTitle = titleText;
-    document.getElementById('legendTitle').innerText = titleText;
+
+    if (!DATASETS[key]) {
+      DATASETS[key] = {
+        title: titleText,
+        label: titleText,
+        ticks: ["0", "20", "40", "60", "80", "100%"],
+        gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494)",
+        colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494']
+      };
+    }
+
     renderMap();
   }
 
