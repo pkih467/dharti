@@ -1,0 +1,41 @@
+{
+  "country": "India",
+  "iso_alpha2": "IN",
+  "retrieval_date": "2026-08-13",
+  "population_by_year": [
+    { "year": 2015, "population": 1311051000, "unit": "persons", "source": "UN WPP", "source_url": "https://population.un.org/wpp/" },
+    { "year": 2020, "population": 1380004000, "unit": "persons", "source": "UN WPP", "source_url": "https://population.un.org/wpp/" },
+    { "year": 2022, "population": 1407563000, "unit": "persons", "source": "UN WPP", "source_url": "https://population.un.org/wpp/" },
+    { "year": 2023, "population": 1428627000, "unit": "persons", "source": "UN WPP", "source_url": "https://population.un.org/wpp/" },
+    { "year": 2024, "population": 1441719000, "unit": "persons", "source": "UN WPP", "source_url": "https://population.un.org/wpp/" }
+  ],
+  "gdp_nominal_usd_by_year": [
+    { "year": 2015, "gdp_usd": 2105400000000, "unit": "current US$", "source": "IMF WEO", "source_url": "https://www.imf.org/en/Publications/WEO" },
+    { "year": 2020, "gdp_usd": 2661100000000, "unit": "current US$", "source": "IMF WEO", "source_url": "https://www.imf.org/en/Publications/WEO" },
+    { "year": 2022, "gdp_usd": 3389800000000, "unit": "current US$", "source": "IMF WEO", "source_url": "https://www.imf.org/en/Publications/WEO" },
+    { "year": 2023, "gdp_usd": 3669700000000, "unit": "current US$", "source": "IMF WEO", "source_url": "https://www.imf.org/en/Publications/WEO" },
+    { "year": 2024, "gdp_usd": 3901800000000, "unit": "current US$", "source": "IMF WEO", "source_url": "https://www.imf.org/en/Publications/WEO" }
+  ],
+  "literacy": {
+    "indicator": "Adult literacy rate (age 15+), total (%)",
+    "value_pct": 78.16,
+    "year": 2024,
+    "source": "World Bank (UNESCO-derived series)",
+    "source_url": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS?locations=IN"
+  },
+  "religion_shares": {
+    "year_estimate": 2024,
+    "source": "Pew Research Center",
+    "source_url": "https://www.pewresearch.org/religion/2021/06/29/religion-in-india-tolerance-and-segregation/",
+    "shares_pct": {
+      "hindu": 79.8,
+      "muslim": 14.2,
+      "christian": 2.3,
+      "sikh": 1.7,
+      "buddhist": 0.7,
+      "jain": 0.4,
+      "other": 0.9
+    }
+  },
+  "notes": "Values are taken from the named authoritative datasets (UN WPP, IMF WEO, World Bank, Pew). See source URLs for original tables and download options."
+}
