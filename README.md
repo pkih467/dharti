@@ -1,50 +1,46 @@
-# dharti – India atlas (SHRUG-style) data + MapLibre pipeline
+# dharti — India atlas
 
-This repository contains the pipeline, schema, and app skeleton to build a SHRUG-like India atlas:
-- Admin boundaries (states / districts / talukas) sourced from DataMeet / Census / OSM
-- Indicator tables and PostGIS schema
-- Vector tile pipeline: mapshaper → tippecanoe → tileserver-gl
-- Client: MapLibre GL JS (React skeleton) with legend, left accordion, search, highlight/pin and popup card.
+What this package contains
+- sql/schema.sql: PostGIS-ready schema for regions and indicators.
+- scripts/build_tiles.sh: pipeline to pull datameet maps, merge, simplify, and produce MBTiles via tippecanoe.
+- scripts/run_tileserver.sh: serve MBTiles with Tileserver GL Docker image.
+- data/: sample metadata, country_demographics.json, templates, and small GeoJSON preview fixtures.
+- web/demo/index.html: single-file MapLibre demo (open in browser immediately).
+- web/: scaffold for full React app (package.json).
 
-Top-level files:
-- sql/schema.sql                -- PostGIS DDL
-- data/regions_states.json      -- 36 states / UTs metadata (names, ISO codes, capitals)
-- scripts/build_tiles.sh        -- pipeline to fetch datameet, simplify, and build mbtiles
-- scripts/run_tileserver.sh     -- serve mbtiles with Tileserver GL
-- web/                          -- MapLibre React app skeleton (see below)
-- sources.json                  -- metadata about data sources & licenses
+Quick preview (no install) — open demo now
+1. Locate `web/demo/index.html` in this folder.
+2. Recommended: serve via a simple HTTP server to avoid file:// limitations:
+   - Python (macOS): `cd web/demo && python3 -m http.server 8000`
+   - Then open: http://localhost:8000/index.html
+3. The demo uses embedded sample GeoJSON and MapLibre. Click a polygon to highlight, drop a pin, and open the info card.
 
-Quick start (local):
-1) Install prerequisites:
-   - Node 18+, npm/yarn
-   - mapshaper (npm i -g mapshaper) or via conda
-   - tippecanoe (Linux/Mac; brew on Mac or compile)
-   - Docker (for tileserver)
+Recommended local full setup (macOS) — produces vector tiles + tileserver + full app
+Prerequisites (macOS)
+- Homebrew (https://brew.sh/) installed.
+- Install Docker Desktop for Mac: https://www.docker.com/products/docker-desktop
+- Install tippecanoe: `brew install tippecanoe`
+- Install mapshaper (node): `npm install -g mapshaper`
+- (Optional) Node.js & npm: https://nodejs.org/ (for full React app)
 
-2) Build vector tiles (example)
-   ./scripts/build_tiles.sh
-   (inspect tilesource and adjust paths; some datameet files are per-state and require merging)
+Build tiles (one-time)
+1. Make scripts executable: `chmod +x scripts/*.sh`
+2. Run build: `./scripts/build_tiles.sh`
+   - This clones datameet/maps, copies GeoJSON into `tilesource`, merges with `mapshaper`, and builds `mbtiles/india_admins.mbtiles` with `tippecanoe`.
+   - If datameet layout differs, you may need to adjust the rsync/find patterns in the script.
 
-3) Serve tiles locally
-   ./scripts/run_tileserver.sh
-   Open http://localhost:8080 to see tile endpoint and tilejson.
+Serve tiles (Tileserver GL)
+1. Start Docker Desktop.
+2. Run server: `./scripts/run_tileserver.sh`
+3. Visit: http://localhost:8080 — Tileserver provides TileJSON and vector tile endpoints (e.g., `/data/india_admins.json` and `/data/india_admins/{z}/{x}/{y}.pbf`).
 
-4) Run the web app
-   cd web
-   npm install
-   npm start
-   Open http://localhost:3000 (or port from create-react-app)
+Run the web app (React dev)
+1. `cd web`
+2. `npm install`
+3. `npm start`
+4. Open http://localhost:3000 — edit config in `web/src` to point `TILEJSON_URL` to `http://localhost:8080/data/india_admins.json`.
 
-Data sources & licensing
-- Primary boundary source: DataMeet Maps (https://github.com/datameet/maps) — MIT license on repo; some files CC-BY-SA 4.0. Check per-file metadata and include attribution.
-- Alternative / supplemental: GADM, Census of India (Census GIS), OpenStreetMap (ODbL). See sources.json for details.
-- Indicator sources: NITI Aayog, NFHS, MoSPI, UDISE+, WorldPop, UN, IMF, World Bank, Meta RWI, Pew. Many are public; some (RWI, Meta) have separate terms — we provide access instructions and metadata for those.
-
-Notes & caveats
-- Taluka (admin3) coverage varies by source. DataMeet has many subdistrict shapefiles; some states require OSM extraction or Census shapefiles.
-- For glitch-free client rendering we highly recommend vector tiles (MBTiles via tippecanoe) and MapLibre GL JS on the client.
-- Precompute legend bins (indicator_legend) server-side and store them (indicator_legend table) so the client only reads JSON for color breaks and does not recompute heavy quantiles.
-
-Next steps / TODO
-- I will create example region_indicators CSV templates and populate country-level demographics (population/gdp/literacy/religion shares) from public sources and attach them as data/country_demographics.json if you want.
-- If you'd like, I can prepare a completed sample MBTiles file for admin1+admin2 (reduced zoom) and a populated sample indicator dataset (district-level per-capita consumption, RWI sample) — note MBTiles distribution might be large; I can provide a small sample MBTiles for review.
+Notes and guidance
+- Taluka (admin3) coverage may vary by source. The build script copies whatever GeoJSON files are available in datameet/maps; inspect `tilesource/` to confirm coverage.
+- For best client performance use MapLibre + vector tiles (this pipeline). The demo uses embedded GeoJSON only for preview and does not require a tileserver.
+- Licensing: inspect `sources.json`. DataMeet, OSM, Census, IMF, UN, World Bank all have different licenses/terms — read them before redistributing data.
