@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Dharti — Demo (MapLibre, sample GeoJSON)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />
+  <style>
+    :root { --sidebar-bg: #f5fbff; --accent: #034f84; --panel: #e6f4ff; }
+    body, html { height:100%; margin:0; font-family: Inter, Arial, sans-serif; }
+    .app-root{ display:flex; height:100vh; }
+    .left-sidebar{ width:320px; background:var(--sidebar-bg); border-right:1px solid #d7eefc; padding:12px; overflow:auto; }
+    .map-wrap{ flex:1; position:relative; }
+    #map { position:absolute; inset:0; }
+    .search-top input{ width:100%; padding:8px; margin-bottom:8px; border-radius:4px; border:1px solid #cfeafc; }
+    .accordion-toggle{ width:100%; text-align:left; background:var(--panel); border:none; padding:10px; border-radius:6px; color:var(--accent); font-weight:600; margin-bottom:6px; }
+    .panel-button{ display:block; width:100%; text-align:left; padding:6px; border-radius:4px; background:transparent; border:1px solid transparent; margin-bottom:4px; cursor:pointer; }
+    .info-card { position:absolute; left:340px; top:12px; z-index:10; background:#fff; padding:10px; border-radius:6px; box-shadow:0 4px 14px rgba(0,0,0,0.12); min-width:220px; display:none; }
+    .legend-box{ position:absolute; right:12px; bottom:12px; background: rgba(255,255,255,0.95); padding:8px; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.12); font-size:13px; }
+  </style>
+</head>
+<body>
+  <div class="app-root">
+    <aside class="left-sidebar">
+      <div class="search-top">
+        <input id="search" placeholder="Search district or village (shrid/name)..." />
+        <select id="stateJump"><option value="">Jump to state...</option></select>
+      </div>
+
+      <div>
+        <button class="accordion-toggle">1. Consumption, Wealth & Macro-Economy</button>
+        <div style="padding-left:6px">
+          <button class="panel-button" data-ind="rwi">Relative Wealth Index (RWI)</button>
+          <button class="panel-button" data-ind="mpi">Multidimensional Poverty Index (MPI)</button>
+          <button class="panel-button" data-ind="per_capita_consumption">Per Capita Consumption</button>
+        </div>
+      </div>
+
+      <div>
+        <button class="accordion-toggle">2. Demographics & Social Groups</button>
+        <div style="padding-left:6px">
+          <button class="panel-button" data-ind="sc_share">SC population share</button>
+          <button class="panel-button" data-ind="st_share">ST population share</button>
+          <button class="panel-button" data-ind="religion_muslim">Muslim share</button>
+        </div>
+      </div>
+
+      <!-- Add more domains similarly -->
+    </aside>
+
+    <div class="map-wrap">
+      <div id="map"></div>
+      <div class="info-card" id="infoCard"></div>
+      <div class="legend-box" id="legendBox">
+        <div><strong>Legend</strong></div>
+        <div id="legendBars" style="margin-top:6px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Embedded small GeoJSON (sample) -->
+  <script>
+    const sampleAdmin1 = {
+      "type":"FeatureCollection","features":[{"type":"Feature","properties":{"shrid":"IN-XX-000","name":"Sample State","admin_level":1,"primary_sector":"Services","active_val":123.4},"geometry":{"type":"Polygon","coordinates":[[[75.0,20.0],[78.0,20.0],[78.0,23.0],[75.0,23.0],[75.0,20.0]]]}}]
+    };
+    const sampleAdmin2 = {
+      "type":"FeatureCollection","features":[{"type":"Feature","properties":{"shrid":"IN-XX-001","name":"Sample District","admin_level":2,"state_name":"Sample State","primary_sector":"Manufacturing","active_val":78.2},"geometry":{"type":"Polygon","coordinates":[[[75.5,20.5],[76.5,20.5],[76.5,21.5],[75.5,21.5],[75.5,20.5]]]}}]
+    };
+    const sampleAdmin3 = {
+      "type":"FeatureCollection","features":[{"type":"Feature","properties":{"shrid":"IN-XX-001-01","name":"Sample Taluka","admin_level":3,"state_name":"Sample State","district_name":"Sample District","primary_sector":"Agriculture","active_val":45.9},"geometry":{"type":"Polygon","coordinates":[[[75.6,20.6],[76.0,20.6],[76.0,21.0],[75.6,21.0],[75.6,20.6]]]}}]
+    };
+  </script>
+
+  <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+  <script>
+    const map = new maplibregl.Map({
+      container: 'map',
+      style: {
+        "version":8,
+        "sources":{},
+        "layers":[{"id":"background","type":"background","paint":{"background-color":"#f7fbff"}}]
+      },
+      center: [77.0,21.5],
+      zoom: 6
+    });
+
+    map.on('load', () => {
+      // Add GeoJSON sources (embedded sample)
+      map.addSource('sample-admin1', { type: 'geojson', data: sampleAdmin1 });
+      map.addSource('sample-admin2', { type: 'geojson', data: sampleAdmin2 });
+      map.addSource('sample-admin3', { type: 'geojson', data: sampleAdmin3 });
+
+      // Fill layers (choropleth placeholder: use active_val to color)
+      map.addLayer({
+        id: 'fill-admin1',
+        type: 'fill',
+        source: 'sample-admin1',
+        paint: {
+          'fill-color': '#a6cee3',
+          'fill-opacity': 0.7
+        }
+      });
+      map.addLayer({
+        id: 'line-admin1',
+        type: 'line',
+        source: 'sample-admin1',
+        paint: { 'line-color': '#ffffff', 'line-width': 1 }
+      });
+
+      map.addLayer({
+        id: 'fill-admin2',
+        type: 'fill',
+        source: 'sample-admin2',
+        paint: { 'fill-color': '#1f78b4', 'fill-opacity': 0.7 }
+      });
+      map.addLayer({
+        id: 'line-admin2',
+        type: 'line',
+        source: 'sample-admin2',
+        paint: { 'line-color': '#ffffff', 'line-width': 1 }
+      });
+
+      map.addLayer({
+        id: 'fill-admin3',
+        type: 'fill',
+        source: 'sample-admin3',
+        paint: { 'fill-color': '#b2df8a', 'fill-opacity': 0.8 }
+      });
+      map.addLayer({
+        id: 'line-admin3',
+        type: 'line',
+        source: 'sample-admin3',
+        paint: { 'line-color': '#ffffff', 'line-width': 1 }
+      });
+
+      // Highlight line (starts empty)
+      map.addLayer({
+        id: 'highlight-line',
+        type: 'line',
+        source: 'sample-admin1', // use any source; we'll set filter across sources by matching shrid
+        paint: { 'line-color': '#000000', 'line-width': 2 },
+        filter: ['==', ['get', 'shrid'], '']
+      });
+
+      // Click handlers: check each layer in order of granularity
+      const layers = ['fill-admin3','fill-admin2','fill-admin1'];
+      layers.forEach(layer => {
+        map.on('click', layer, (e) => {
+          const props = e.features[0].properties;
+          showInfoCard(props, e.lngLat);
+          // set highlight filter across the highlight layer (we'll target sample-admin1 source)
+          // The highlight layer uses the sample-admin1 source; to highlight any shrid, we temporarily add a geojson source of the clicked polygon and set the highlight filter.
+          // Simpler: add a temporary layer for the clicked polygon geometry
+          if (map.getLayer('temp-highlight')) map.removeLayer('temp-highlight');
+          if (map.getSource('temp-highlight-src')) map.removeSource('temp-highlight-src');
+          map.addSource('temp-highlight-src', { type:'geojson', data: e.features[0].toJSON() });
+          map.addLayer({ id:'temp-highlight', type:'line', source:'temp-highlight-src', paint:{'line-color':'#000','line-width':3} });
+          // Drop pin at centroid
+          const centroid = turf.centroid(e.features[0]);
+          addPin(centroid.geometry.coordinates);
+        });
+        map.on('mouseenter', layer, () => map.getCanvas().style.cursor = 'pointer');
+        map.on('mouseleave', layer, () => map.getCanvas().style.cursor = '');
+      });
+
+      // Build legend (sample quantiles)
+      const legendBars = document.getElementById('legendBars');
+      const colors = ['#edf8fb','#b2e2e2','#66c2a4','#238b45','#00441b'];
+      const bins = ['0–20','21–40','41–60','61–80','81–120'];
+      legendBars.innerHTML = colors.map((c,i) => `<div style="display:flex;align-items:center;margin:3px 0"><div style="width:26px;height:14px;background:${c};margin-right:8px;border:1px solid #ccc"></div><div>${bins[i]}</div></div>`).join('');
+
+    });
+
+    // Simple info card and pin management
+    const infoCard = document.getElementById('infoCard');
+    let marker = null;
+
+    function showInfoCard(props, lngLat) {
+      infoCard.style.display = 'block';
+      infoCard.innerHTML = `<strong>${props.name}</strong><div>SHRID: ${props.shrid}</div><div>Indicator: ${props.active_val ?? 'n/a'}</div><div>Primary sector: ${props.primary_sector ?? 'n/a'}</div>`;
+      // position relatively (not perfect on small screens)
+      infoCard.style.left = '340px';
+      infoCard.style.top = '12px';
+    }
+
+    function addPin(coord) {
+      // remove existing marker element
+      if (marker) { marker.remove(); marker = null; }
+      const el = document.createElement('div');
+      el.style.width = '18px'; el.style.height = '18px'; el.style.borderRadius = '50%';
+      el.style.background = '#ff5722'; el.style.border = '2px solid white'; el.style.boxShadow = '0 2px 6px rgba(0,0,0,0.25)';
+      marker = new maplibregl.Marker(el).setLngLat(coord).addTo(map);
+    }
+
+    // Tiny search: search by shrid/name across embedded features
+    document.getElementById('search').addEventListener('keydown', (ev) => {
+      if (ev.key !== 'Enter') return;
+      const q = ev.target.value.trim().toLowerCase();
+      if (!q) return;
+      const all = [...sampleAdmin3.features, ...sampleAdmin2.features, ...sampleAdmin1.features];
+      const found = all.find(f => (f.properties.shrid && f.properties.shrid.toLowerCase()===q) || (f.properties.name && f.properties.name.toLowerCase().includes(q)));
+      if (found) {
+        const bbox = turf.bbox(found);
+        map.fitBounds([[bbox[0],bbox[1]],[bbox[2],bbox[3]]], { padding: 40 });
+        showInfoCard(found.properties);
+      } else {
+        alert('No match in sample dataset.');
+      }
+    });
+  </script>
+
+  <!-- Turf (for centroid/bbox in demo) -->
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+</body>
+</html>
