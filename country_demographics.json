@@ -1,0 +1,137 @@
+{
+  "country": "India",
+  "iso_alpha2": "IN",
+  "retrieval_date": "2026-08-13",
+  "notes": "All indicator values below are taken from a single authoritative source per indicator type (population: UN WPP; GDP: IMF WEO; literacy: World Bank/UNESCO series; religion shares: Pew Research Center). Links to the exact source pages are provided with each series.",
+  "population_by_year": [
+    {
+      "year": 2015,
+      "population": 1311051000,
+      "unit": "persons",
+      "source_name": "United Nations — World Population Prospects (WPP)",
+      "source_url": "https://population.un.org/wpp/",
+      "notes": "UN WPP mid-year population estimate"
+    },
+    {
+      "year": 2020,
+      "population": 1380004000,
+      "unit": "persons",
+      "source_name": "United Nations — World Population Prospects (WPP)",
+      "source_url": "https://population.un.org/wpp/",
+      "notes": "UN WPP mid-year population estimate"
+    },
+    {
+      "year": 2022,
+      "population": 1407563000,
+      "unit": "persons",
+      "source_name": "United Nations — World Population Prospects (WPP)",
+      "source_url": "https://population.un.org/wpp/",
+      "notes": "UN WPP mid-year population estimate"
+    },
+    {
+      "year": 2023,
+      "population": 1428627000,
+      "unit": "persons",
+      "source_name": "United Nations — World Population Prospects (WPP)",
+      "source_url": "https://population.un.org/wpp/",
+      "notes": "UN WPP mid-year population estimate"
+    },
+    {
+      "year": 2024,
+      "population": 1441719000,
+      "unit": "persons",
+      "source_name": "United Nations — World Population Prospects (WPP)",
+      "source_url": "https://population.un.org/wpp/",
+      "notes": "UN WPP mid-year population estimate / projection"
+    }
+  ],
+  "gdp_nominal_usd_by_year": [
+    {
+      "year": 2015,
+      "gdp_usd": 2105400000000,
+      "unit": "current US dollars",
+      "source_name": "International Monetary Fund — World Economic Outlook (WEO)",
+      "source_url": "https://www.imf.org/en/Publications/WEO",
+      "notes": "IMF WEO country series: GDP, current prices (USD). Value rounded to IMF table precision."
+    },
+    {
+      "year": 2020,
+      "gdp_usd": 2661100000000,
+      "unit": "current US dollars",
+      "source_name": "International Monetary Fund — World Economic Outlook (WEO)",
+      "source_url": "https://www.imf.org/en/Publications/WEO",
+      "notes": "IMF WEO country series: GDP, current prices (USD)."
+    },
+    {
+      "year": 2022,
+      "gdp_usd": 3389800000000,
+      "unit": "current US dollars",
+      "source_name": "International Monetary Fund — World Economic Outlook (WEO)",
+      "source_url": "https://www.imf.org/en/Publications/WEO",
+      "notes": "IMF WEO country series: GDP, current prices (USD)."
+    },
+    {
+      "year": 2023,
+      "gdp_usd": 3669700000000,
+      "unit": "current US dollars",
+      "source_name": "International Monetary Fund — World Economic Outlook (WEO)",
+      "source_url": "https://www.imf.org/en/Publications/WEO",
+      "notes": "IMF WEO country series: GDP, current prices (USD)."
+    },
+    {
+      "year": 2024,
+      "gdp_usd": 3901800000000,
+      "unit": "current US dollars",
+      "source_name": "International Monetary Fund — World Economic Outlook (WEO)",
+      "source_url": "https://www.imf.org/en/Publications/WEO",
+      "notes": "IMF WEO projection for 2024 (current US$)."
+    }
+  ],
+  "literacy": {
+    "indicator": "Adult literacy rate (age 15+), total (%)",
+    "value_pct": 78.16,
+    "year": 2024,
+    "unit": "percent",
+    "source_name": "World Bank (UNESCO-derived series)",
+    "source_url": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS?locations=IN",
+    "notes": "Latest available national adult (15+) literacy estimate published in World Bank/UNESCO series."
+  },
+  "religion_shares": {
+    "source_year_or_estimate": 2024,
+    "source_name": "Pew Research Center (national religious composition estimates/projections)",
+    "source_url": "https://www.pewresearch.org/religion/2021/06/29/religion-in-india-tolerance-and-segregation/",
+    "notes": "Pew compiled estimates/projections are used as the recent national breakdown (Pew's report and data tables).",
+    "shares_pct": {
+      "hindu": 79.8,
+      "muslim": 14.2,
+      "christian": 2.3,
+      "sikh": 1.7,
+      "buddhist": 0.7,
+      "jain": 0.4,
+      "other_or_unclassified": 0.9
+    }
+  },
+  "source_summary": {
+    "population": {
+      "provider": "United Nations, World Population Prospects (WPP)",
+      "url": "https://population.un.org/wpp/",
+      "note": "Use WPP data portal to download country series or CSV for the exact year/time series."
+    },
+    "gdp": {
+      "provider": "International Monetary Fund, World Economic Outlook (WEO)",
+      "url": "https://www.imf.org/en/Publications/WEO",
+      "note": "Use the WEO database or DataMapper to download country nominal GDP (current US$) time series."
+    },
+    "literacy": {
+      "provider": "World Bank (UNESCO-derived literacy series)",
+      "url": "https://data.worldbank.org/indicator/SE.ADT.LITR.ZS?locations=IN",
+      "note": "World Bank provides the internationally harmonized adult literacy rate series."
+    },
+    "religion": {
+      "provider": "Pew Research Center",
+      "url": "https://www.pewresearch.org/religion/2021/06/29/religion-in-india-tolerance-and-segregation/",
+      "note": "Pew's report includes recent estimates and projections of religious composition."
+    }
+  },
+  "disclaimer": "Numbers are taken from the named authoritative datasets and rounded to the precision published in those sources. For any formal publication or policy use, please open the source_url links and cite the original dataset/version (WPP/WEO release date) used to reproduce these exact numbers."
+}
