@@ -263,15 +263,22 @@
   }
 
   function generateStateGeoJSON(stateName) {
-    let centerLat = 20.5937, centerLng = 78.9629, span = 3.0;
-    if(stateName === 'Goa') { centerLat = 15.2993; centerLng = 74.1240; span = 0.6; }
-    else if(stateName === 'Gujarat') { centerLat = 22.2587; centerLng = 71.1924; span = 2.5; }
-    else if(stateName === 'Maharashtra') { centerLat = 19.7515; centerLng = 75.7139; span = 3.5; }
+    let centerLat = 20.5937, centerLng = 78.9629, span = 12.0;
+    if(stateName === 'Goa') { centerLat = 15.2993; centerLng = 74.1240; span = 0.8; }
+    else if(stateName === 'Gujarat') { centerLat = 22.2587; centerLng = 71.1924; span = 4.5; }
+    else if(stateName === 'Haryana') { centerLat = 29.0588; centerLng = 76.0856; span = 3.0; }
+    else if(stateName === 'Maharashtra') { centerLat = 19.7515; centerLng = 75.7139; span = 6.0; }
+    else if(stateName === 'Punjab') { centerLat = 31.1471; centerLng = 75.3412; span = 2.5; }
+    else if(stateName === 'Uttar Pradesh') { centerLat = 26.8467; centerLng = 80.9462; span = 6.5; }
 
     let features = [];
-    let districts = stateName === 'Goa' ? ["North Goa", "South Goa", "Panaji Urban", "Mormugao", "Ponda Tract", "Canacona Zone"] : ["North Zone", "Central District", "South Sector", "Eastern Division", "Western Corridor", "Coastal Tract"];
+    let districts = stateName === 'Goa' ? ["North Goa", "South Goa", "Panaji Urban", "Mormugao", "Ponda Tract", "Canacona Zone"] : 
+                    stateName === 'Haryana' ? ["Gurgaon", "Faridabad", "Panipat", "Ambala", "Hisar", "Rohtak", "Karnal", "Sonipat", "Kurukshetra"] :
+                    ["District Alpha", "District Beta", "District Gamma", "District Delta", "District Epsilon", "District Zeta"];
 
-    let cols = 3, rows = 2, dLat = span / rows, dLng = span / cols;
+    let cols = 3, rows = Math.ceil(districts.length / cols);
+    let dLat = span / rows, dLng = span / cols;
+
     districts.forEach((dist, idx) => {
       let r = Math.floor(idx / cols), c = idx % cols;
       let minLng = (centerLng - span/2) + c * dLng, maxLng = minLng + dLng;
@@ -295,7 +302,7 @@
         let name = feature.properties.district, hash = 0;
         for (let i = 0; i < name.length; i++) hash += name.charCodeAt(i);
         let idx = Math.abs(hash) % config.colors.length;
-        return { fillColor: config.colors[idx], fillOpacity: 0.75, color: '#ffffff', weight: 1.2 };
+        return { fillColor: config.colors[idx], fillOpacity: 0.65, color: '#1e3a47', weight: 1.5 };
       },
       onEachFeature: function(feature, layer) {
         layer.on({ click: function(e) { L.DomEvent.stopPropagation(e); selectRegion(layer, feature.properties, e.latlng); } });
