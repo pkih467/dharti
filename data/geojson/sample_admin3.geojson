@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "shrid": "IN-XX-001-01",
+        "name": "Sample Taluka",
+        "admin_level": 3,
+        "state_name": "Sample State",
+        "district_name": "Sample District",
+        "primary_sector": "Agriculture",
+        "active_val": 45.9
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [75.6, 20.6],
+            [76.0, 20.6],
+            [76.0, 21.0],
+            [75.6, 21.0],
+            [75.6, 20.6]
+          ]
+        ]
+      }
+    }
+  ]
+}
