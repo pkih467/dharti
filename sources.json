@@ -30,3 +30,17 @@
     {"name":"IMF / World Bank (GDP)","url":"https://data.worldbank.org/","notes":"National & annual GDP"}
   ]
 }
+{
+  "boundaries": [
+    {"name":"DataMeet Maps","url":"https://github.com/datameet/maps","levels":["admin1","admin2","admin3 (varies)"],"license":"MIT repo / per-file CC-BY-SA 4.0 (check file)","retrieved":"2026-08-13"},
+    {"name":"Census of India - GIS","url":"https://censusindia.gov.in/census.website/data/censusgis","levels":["admin1","admin2","admin3 (varies)"],"license":"Government of India terms (check portal)","retrieved":"2026-08-13"},
+    {"name":"OpenStreetMap / Geofabrik","url":"https://download.geofabrik.de/asia/india.html","license":"ODbL","retrieved":"2026-08-13"}
+  ],
+  "indicators": [
+    {"name":"UN World Population Prospects","url":"https://population.un.org/wpp/"},
+    {"name":"IMF World Economic Outlook (WEO)","url":"https://www.imf.org/en/Publications/WEO"},
+    {"name":"World Bank / UNESCO literacy series","url":"https://data.worldbank.org/indicator/SE.ADT.LITR.ZS?locations=IN"},
+    {"name":"Pew Research Center - Religion in India","url":"https://www.pewresearch.org/religion/2021/06/29/religion-in-india-tolerance-and-segregation/"},
+    {"name":"NITI Aayog - SDG India Index","url":"https://sdgindiaindex.niti.gov.in/"}
+  ]
+}
