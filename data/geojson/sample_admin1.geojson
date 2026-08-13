@@ -1,0 +1,27 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "shrid": "IN-XX-000",
+        "name": "Sample State",
+        "admin_level": 1,
+        "primary_sector": "Services",
+        "active_val": 123.4
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [75.0, 20.0],
+            [78.0, 20.0],
+            [78.0, 23.0],
+            [75.0, 23.0],
+            [75.0, 20.0]
+          ]
+        ]
+      }
+    }
+  ]
+}
