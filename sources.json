@@ -1,0 +1,32 @@
+{
+  "boundaries": [
+    {
+      "name": "DataMeet Maps (GitHub)",
+      "url": "https://github.com/datameet/maps",
+      "levels": ["admin1","admin2","admin3 (varies)"],
+      "license": "MIT on repo; per-file CC-BY-SA 4.0/other - inspect each file",
+      "retrieved": "2026-08-13"
+    },
+    {
+      "name": "Census of India - GIS Shapefiles",
+      "url": "https://censusindia.gov.in/census.website/data/censusgis",
+      "levels": ["admin1","admin2","admin3 (varies)"],
+      "license": "Government of India terms (check portal)",
+      "retrieved": "2026-08-13"
+    },
+    {
+      "name": "OpenStreetMap / Geofabrik",
+      "url": "https://download.geofabrik.de/asia/india.html",
+      "levels": ["variable; extractable"],
+      "license": "ODbL",
+      "retrieved": "2026-08-13"
+    }
+  ],
+  "indicators": [
+    {"name":"NITI Aayog SDG India Index","url":"https://sdgindiaindex.niti.gov.in/","notes":"District-level SDG scores"},
+    {"name":"NFHS (IIPS/Ministry of Health)","url":"http://rchiips.org/nfhs/","notes":"Health, nutrition indicators at district level"},
+    {"name":"MoSPI / PLFS / HCES","url":"https://mospi.gov.in/","notes":"Consumption, employment surveys"},
+    {"name":"WorldPop / UN Population Division","url":"https://www.worldpop.org/","notes":"Population grids and projections"},
+    {"name":"IMF / World Bank (GDP)","url":"https://data.worldbank.org/","notes":"National & annual GDP"}
+  ]
+}
