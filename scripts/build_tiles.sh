@@ -1,36 +1,34 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# 1) Clone DataMeet maps (or download specific geojson releases)
-# (Note: datameet/maps is MIT; individual source files may have different licences - check each)
-git clone https://github.com/datameet/maps.git datameet-maps
-cd datameet-maps
+# Build vector tiles (MBTiles) from GeoJSON sources (datameet/maps)
+# REQUIREMENTS (macOS):
+#  - git, node, mapshaper (npm i -g mapshaper), tippecanoe (brew install tippecanoe)
+# Usage: ./scripts/build_tiles.sh
+BASE_DIR=$(cd "$(dirname "$0")/.." && pwd)
+mkdir -p "$BASE_DIR/tilesource" "$BASE_DIR/mbtiles" "$BASE_DIR/tmp"
 
-# Example: find district/taluka GeoJSON paths. datameet repo organizes per-state folders:
-# e.g., maps/India/districts/<state>/*.geojson or subdistricts/
-# You may copy or aggregate relevant files into a single folder.
-mkdir -p ../tilesource
-# (This loop is illustrative — inspect datameet folder structure)
-find . -type f -name "*district*.geojson" -exec cp {} ../tilesource/ \;
-find . -type f -name "*subdistrict*.geojson" -exec cp {} ../tilesource/ \;
+echo "1) Cloning datameet/maps (if not present)..."
+if [ ! -d "$BASE_DIR/datameet-maps" ]; then
+  git clone https://github.com/datameet/maps.git "$BASE_DIR/datameet-maps"
+else
+  echo "datameet-maps already cloned; pulling latest..."
+  git -C "$BASE_DIR/datameet-maps" pull --ff-only || true
+fi
 
-cd ../tilesource
+echo "2) Copying geojson into tilesource (state/district/subdistrict where available)..."
+# This is a conservative copy; adjust patterns based on datameet layout.
+rsync -av --include='*/' --include='*.geojson' --exclude='*' "$BASE_DIR/datameet-maps/" "$BASE_DIR/tilesource/"
 
-# 2) Merge per-level files into single GeoJSON for tippecanoe, preserving a property admin_level
-# Example: admin1 (states), admin2 (districts), admin3 (talukas) should be merged separately or merged with property admin_level
-# If you have individual files per state, use jq/mapshaper to merge.
+echo "3) Merging GeoJSON files into single merged_all.geojson (admin level property may be present)"
+cd "$BASE_DIR/tilesource"
+# If files have different properties, mapshaper will merge attributes.
+mapshaper '*.geojson' -merge-layers -o "$BASE_DIR/tmp/merged_all.geojson" force
 
-# Example using mapshaper to merge & simplify:
-# Merge all GeoJSON into one, set admin_level based on file naming or pre-processing
-mapshaper '*.geojson' -merge-layers -o merged_all.geojson
+echo "4) Simplify geometry for faster tile generation (create simplified version)"
+mapshaper "$BASE_DIR/tmp/merged_all.geojson" -simplify dp 5% keep-shapes -o "$BASE_DIR/tmp/merged_all_simplified.geojson" force
 
-# Optionally create simplified geometry for low-zoom
-mapshaper merged_all.geojson -simplify dp 5% keep-shapes -o merged_all_simplified.geojson
+echo "5) Build MBTiles with tippecanoe (vector tiles). Adjust -z / -Z for zoom range."
+tippecanoe -o "$BASE_DIR/mbtiles/india_admins.mbtiles" -zg --drop-densest-as-needed --extend-zooms-if-still-dropping "$BASE_DIR/tmp/merged_all.geojson"
 
-# 3) Tippecanoe: create MBTiles vector tiles (adjust max zoom -Z 12..14)
-# name output mbtiles accordingly; drop densest features as needed
-tippecanoe -o india_admins.mbtiles -z12 -Z0 --drop-densest-as-needed --extend-zooms-if-still-dropping merged_all.geojson
-
-# 4) Export MBTiles as tileserver or host MBTiles directly with Tileserver GL
-# (See README for tileserver-gl docker command)
-echo "Built india_admins.mbtiles"
+echo "Built MBTiles at: $BASE_DIR/mbtiles/india_admins.mbtiles"
