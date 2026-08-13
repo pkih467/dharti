@@ -24,7 +24,6 @@
     * { box-sizing: border-box; }
     body, html { margin: 0; padding: 0; height: 100%; width: 100%; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; overflow: hidden; background: #e0e0e0; }
 
-    /* Client-Side Security Overlay Modal */
     #auth-overlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: #1e3a47; z-index: 99999; display: flex; align-items: center; justify-content: center;
@@ -34,19 +33,13 @@
       width: 320px; text-align: center; display: flex; flex-direction: column; gap: 15px;
     }
     .auth-card h2 { margin: 0; font-size: 18px; color: var(--text-dark); font-weight: 800; }
-    .auth-card input {
-      padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; outline: none;
-    }
-    .auth-card button {
-      padding: 10px; background: var(--brand-blue); color: #fff; border: none; border-radius: 4px;
-      font-weight: 700; cursor: pointer;
-    }
+    .auth-card input { padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-size: 14px; outline: none; }
+    .auth-card button { padding: 10px; background: var(--brand-blue); color: #fff; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; }
     .auth-card button:hover { background: #006680; }
     .auth-error { color: #d9534f; font-size: 11px; display: none; margin: 0; }
 
     #app-container { display: none; width: 100vw; height: 100vh; position: relative; overflow: hidden; }
 
-    /* Left Sidebar Panel */
     #sidebar {
       width: 320px; height: 100vh; background: var(--sidebar-bg);
       border-right: 1px solid var(--border-color); display: flex; flex-direction: column;
@@ -64,7 +57,6 @@
     }
     .brand-title i { color: var(--brand-blue); font-size: 22px; }
 
-    /* Left Sidebar Controls */
     .sidebar-controls {
       padding: 12px 16px; background: #fff; border-bottom: 1px solid var(--border-color);
       display: flex; flex-direction: column; gap: 10px;
@@ -78,7 +70,6 @@
       border-radius: 4px; padding: 7px 10px; font-size: 12px; font-weight: 700;
       color: var(--text-dark); outline: none; cursor: pointer; height: 34px;
     }
-    .sidebar-dropdown:focus { border-color: var(--brand-blue); }
 
     .sidebar-search {
       width: 100%; background: #f8f9fa; border: 1px solid var(--border-color);
@@ -87,7 +78,6 @@
     .sidebar-search i { color: #777; margin-right: 8px; font-size: 12px; }
     .sidebar-search input { border: none; outline: none; background: transparent; width: 100%; font-size: 12px; font-weight: 600; color: #333; }
 
-    /* 16-Domain Accordion Menu */
     .accordion-menu { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
     .accordion-item { border-bottom: 1px solid var(--border-color); }
 
@@ -112,17 +102,9 @@
     .sub-item.active { background: #fff; color: var(--brand-blue); font-weight: 800; border-left: 4px solid var(--brand-blue); }
     .sub-item i { font-size: 10px; color: #888; }
 
-    /* Map Canvas Container */
-    #map-container {
-      flex: 1; height: 100vh; width: calc(100vw - 320px);
-      position: relative; overflow: hidden;
-    }
-    #map {
-      width: 100%; height: 100%; position: absolute;
-      top: 0; left: 0; bottom: 0; right: 0; background: #e0ecef;
-    }
+    #map-container { flex: 1; height: 100vh; width: calc(100vw - 320px); position: relative; overflow: hidden; }
+    #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: #e0ecef; }
 
-    /* Popup Card Typography */
     .leaflet-popup-content-wrapper { border-radius: 6px; padding: 0; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
     .leaflet-popup-content { margin: 0; min-width: 240px; }
     .popup-card { padding: 12px 16px; font-family: -apple-system, sans-serif; background: #f8f9fa; border-radius: 6px; }
@@ -130,7 +112,6 @@
     .popup-card p { margin: 4px 0; font-size: 12px; color: #333; line-height: 1.4; }
     .popup-card .shrug-id { font-size: 11px; font-weight: 700; color: #666; margin-top: 8px; }
 
-    /* Bottom-Right Quantile Legend */
     .shrug-legend {
       position: absolute; bottom: 20px; right: 20px; z-index: 1000;
       background: #fff; padding: 12px 16px; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
@@ -143,7 +124,6 @@
 </head>
 <body>
 
-<!-- Password Gate Overlay -->
 <div id="auth-overlay">
   <div class="auth-card">
     <h2>🔒 Restricted Access</h2>
@@ -155,7 +135,6 @@
 </div>
 
 <div id="app-container">
-  <!-- Left Sidebar Panel -->
   <div id="sidebar">
     <div class="brand-header">
       <div class="brand-title">
@@ -164,11 +143,10 @@
       </div>
     </div>
 
-    <!-- Administrative Controls -->
     <div class="sidebar-controls">
       <div class="control-group">
         <div class="control-label">State / Union Territory</div>
-        <select id="stateSelect" class="sidebar-dropdown" onchange="handleStateSelect(this.value)">
+        <select id="stateSelect" class="sidebar-dropdown" onchange="handleStateSelect(this)">
           <option value="20.5937,78.9629,5,India" selected>🇮🇳 All India Overview</option>
           <optgroup label="── 28 STATES ──">
             <option value="15.9129,79.7400,7,Andhra Pradesh">Andhra Pradesh</option>
@@ -222,12 +200,9 @@
       </div>
     </div>
 
-    <!-- 16 Domain Accordion Categories -->
     <div class="accordion-menu">
       <div class="accordion-item active">
-        <button class="accordion-header" onclick="toggleAccordion(this)">
-          1. Consumption & Wealth <i class="fa-solid fa-chevron-down"></i>
-        </button>
+        <button class="accordion-header" onclick="toggleAccordion(this)">1. Consumption & Wealth <i class="fa-solid fa-chevron-down"></i></button>
         <div class="accordion-content" style="display:flex;">
           <div class="sub-item active" onclick="selectIndicator('meta_rwi', 'Relative Wealth Index (Meta 2024–2026)', this)">Relative Wealth Index (Meta) <i class="fa-solid fa-circle-info"></i></div>
           <div class="sub-item" onclick="selectIndicator('niti_mpi', 'Multidimensional Poverty Index (2026)', this)">Multidimensional Poverty Index <i class="fa-solid fa-circle-info"></i></div>
@@ -238,7 +213,7 @@
       <div class="accordion-item"><button class="accordion-header" onclick="toggleAccordion(this)">4. Water & Hydrology <i class="fa-solid fa-chevron-down"></i></button><div class="accordion-content"><div class="sub-item" onclick="selectIndicator('jjm_water', 'Piped Drinking Water % (JJM Live)', this)">JJM Piped Water % <i class="fa-solid fa-circle-info"></i></div></div></div>
       <div class="accordion-item"><button class="accordion-header" onclick="toggleAccordion(this)">5. Infrastructure & Roads <i class="fa-solid fa-chevron-down"></i></button><div class="accordion-content"><div class="sub-item" onclick="selectIndicator('pmgsy_roads', 'PMGSY Rural All-Weather Road Access %', this)">PMGSY Rural Road Access % <i class="fa-solid fa-circle-info"></i></div></div></div>
       <div class="accordion-item"><button class="accordion-header" onclick="toggleAccordion(this)">6. Urban Building Footprints <i class="fa-solid fa-chevron-down"></i></button><div class="accordion-content"><div class="sub-item" onclick="selectIndicator('amrut_footprints', 'Urban Built-up Density', this)">Urban Built-up Density <i class="fa-solid fa-circle-info"></i></div></div></div>
-      <div class="accordion-item"><button class="accordion-header" onclick="toggleAccordion(this)">7. Healthcare Facilities <i class="fa-solid fa-chevron-down"></i></button><div class="accordion-content"><div class="sub-item" onclick="selectIndicator('phc_coverage', 'Primary Health Centre (PHC) Access', this)">Primary Health Centres <i class="fa-solid fa-circle-info"></i></div></div></div>
+      <div class="accordion-item active"><button class="accordion-header" onclick="toggleAccordion(this)">7. Healthcare Facilities <i class="fa-solid fa-chevron-down"></i></button><div class="accordion-content" style="display:flex;"><div class="sub-item active" onclick="selectIndicator('phc_coverage', 'Primary Health Centre (PHC) Access', this)">Primary Health Centres <i class="fa-solid fa-circle-info"></i></div></div></div>
       <div class="accordion-item"><button class="accordion-header" onclick="toggleAccordion(this)">8. Education & Amenities <i class="fa-solid fa-chevron-down"></i></button><div class="accordion-content"><div class="sub-item" onclick="selectIndicator('aser_lit', 'ASER Std III-V Literacy (2024)', this)">ASER Std III-V Literacy <i class="fa-solid fa-circle-info"></i></div></div></div>
       <div class="accordion-item"><button class="accordion-header" onclick="toggleAccordion(this)">9. Urban Wards & Slums <i class="fa-solid fa-chevron-down"></i></button><div class="accordion-content"><div class="sub-item" onclick="selectIndicator('ward_slums', 'Municipal Wards & Slum Coverage', this)">Ward & Slum Coverage <i class="fa-solid fa-circle-info"></i></div></div></div>
       <div class="accordion-item"><button class="accordion-header" onclick="toggleAccordion(this)">10. Police Jurisdictions <i class="fa-solid fa-chevron-down"></i></button><div class="accordion-content"><div class="sub-item" onclick="selectIndicator('police_density', 'Police Station Coverage Density', this)">Police Station Coverage <i class="fa-solid fa-circle-info"></i></div></div></div>
@@ -251,11 +226,10 @@
     </div>
   </div>
 
-  <!-- Map Canvas Viewport -->
   <div id="map-container">
     <div id="map"></div>
     <div class="shrug-legend">
-      <div id="legendTitle" class="legend-title-box">Relative Wealth Index (Meta 2024–2026)</div>
+      <div id="legendTitle" class="legend-title-box">Primary Health Centre (PHC) Access</div>
       <div id="legendBar" class="legend-bar"></div>
       <div id="legendTicks" class="legend-ticks"></div>
     </div>
@@ -263,8 +237,7 @@
 </div>
 
 <script>
-  // CHANGE THIS TO YOUR DESIRED PASSWORD
-  const APP_PASSWORD = "Pkih@467";
+  const APP_PASSWORD = "YOUR_SECRET_PASSWORD";
 
   function verifyPassword() {
     const inputVal = document.getElementById('authPassword').value;
@@ -278,48 +251,13 @@
   }
 
   const DATASETS = {
-    meta_rwi: {
-      title: "Relative Wealth Index (Meta 2024–2026)",
-      label: "Relative Wealth Index",
-      unit: "Index",
-      ticks: ["-0.4", "-0.2", "-0.1", "0.1", "0.2", "0.4", "0.5+"],
-      gradient: "linear-gradient(to right, #c57071, #d49893, #e2cfc4, #a1c1be, #5a8a92, #386670)",
-      colors: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670']
-    },
-    niti_mpi: {
-      title: "NITI Aayog Multidimensional Poverty Index",
-      label: "MPI Deprivation Score",
-      unit: "%",
-      ticks: ["0%", "20%", "40%", "60%", "80%", "100%"],
-      gradient: "linear-gradient(to right, #386670, #a1c1be, #e2cfc4, #d49893, #c57071)",
-      colors: ['#386670', '#5a8a92', '#a1c1be', '#e2cfc4', '#d49893', '#c57071']
-    },
-    jjm_water: {
-      title: "Piped Drinking Water % (JJM Live)",
-      label: "Piped Water Connection",
-      unit: "%",
-      ticks: ["2%", "20%", "40%", "60%", "80%", "100%"],
-      gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494, #1a2b57)",
-      colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494', '#1a2b57']
-    }
+    meta_rwi: { title: "Relative Wealth Index (Meta)", label: "Relative Wealth Index", unit: "Index", ticks: ["-0.4", "-0.2", "0", "0.2", "0.5+"], gradient: "linear-gradient(to right, #c57071, #e2cfc4, #5a8a92)", colors: ['#c57071', '#d49893', '#e2cfc4', '#a1c1be', '#5a8a92', '#386670'] },
+    niti_mpi: { title: "NITI Aayog MPI Score", label: "MPI Score", unit: "%", ticks: ["0%", "25%", "50%", "75%", "100%"], gradient: "linear-gradient(to right, #386670, #a1c1be, #c57071)", colors: ['#386670', '#5a8a92', '#a1c1be', '#e2cfc4', '#d49893', '#c57071'] },
+    phc_coverage: { title: "Primary Health Centre (PHC) Access", label: "PHC Coverage", unit: "%", ticks: ["0", "20", "40", "60", "80", "100%"], gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494)", colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494', '#1a2b57'] }
   };
 
-  let activeIndicatorKey = 'meta_rwi';
-
-  const NATIONWIDE_INDIA_GEOJSON = {
-    "type": "FeatureCollection",
-    "features": [
-      {"type":"Feature","properties":{"district":"Ahmedabad","state":"Gujarat"},"geometry":{"type":"Polygon","coordinates":[[[71.9,23.3],[72.8,23.2],[72.7,22.3],[71.8,22.4],[71.9,23.3]]]}},
-      {"type":"Feature","properties":{"district":"Surat","state":"Gujarat"},"geometry":{"type":"Polygon","coordinates":[[[72.6,21.5],[73.3,21.4],[73.2,20.8],[72.5,20.9],[72.6,21.5]]]}},
-      {"type":"Feature","properties":{"district":"Rajkot","state":"Gujarat"},"geometry":{"type":"Polygon","coordinates":[[[70.3,22.7],[71.4,22.6],[71.3,21.8],[70.2,21.9],[70.3,22.7]]]}},
-      {"type":"Feature","properties":{"district":"Jaipur","state":"Rajasthan"},"geometry":{"type":"Polygon","coordinates":[[[75.2,27.2],[76.1,27.3],[76.2,26.5],[75.3,26.4],[75.2,27.2]]]}},
-      {"type":"Feature","properties":{"district":"Mumbai","state":"Maharashtra"},"geometry":{"type":"Polygon","coordinates":[[[72.75,19.3],[73.0,19.25],[72.95,18.85],[72.7,18.9],[72.75,19.3]]]}},
-      {"type":"Feature","properties":{"district":"Pune","state":"Maharashtra"},"geometry":{"type":"Polygon","coordinates":[[[73.3,19.2],[74.6,19.1],[74.5,18.1],[73.2,18.2],[73.3,19.2]]]}},
-      {"type":"Feature","properties":{"district":"Hyderabad","state":"Telangana"},"geometry":{"type":"Polygon","coordinates":[[[78.3,17.5],[78.6,17.5],[78.5,17.2],[78.2,17.3],[78.3,17.5]]]}},
-      {"type":"Feature","properties":{"district":"Bengaluru","state":"Karnataka"},"geometry":{"type":"Polygon","coordinates":[[[77.4,13.15],[77.75,13.1],[77.7,12.75],[77.35,12.8],[77.4,13.15]]]}}
-    ]
-  };
-
+  let activeIndicatorKey = 'phc_coverage';
+  let currentStateName = 'India';
   var map = null;
   var polygonLayerGroup = null;
   var activeHighlightLayer = null;
@@ -331,63 +269,76 @@
             <path d="M12 0C5.37 0 0 5.37 0 12C0 21 12 36 12 36C12 36 24 21 24 12C24 5.37 18.63 0 12 0Z" fill="#386670" stroke="#FFFFFF" stroke-width="2"/>
             <circle cx="12" cy="12" r="4" fill="#FFFFFF"/>
            </svg>`,
-    iconSize: [28, 36],
-    iconAnchor: [14, 36],
-    popupAnchor: [0, -32]
+    iconSize: [28, 36], iconAnchor: [14, 36], popupAnchor: [0, -32]
   });
 
   function initMap() {
-    try {
-      map = L.map('map', { zoomControl: false, preferCanvas: true }).setView([20.5937, 78.9629], 5);
-      L.control.zoom({ position: 'topright' }).addTo(map);
-
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(map);
-
-      polygonLayerGroup = L.layerGroup().addTo(map);
-      renderMap();
-    } catch(err) {
-      console.error("Map initialization error:", err);
-    }
+    map = L.map('map', { zoomControl: false, preferCanvas: true }).setView([20.5937, 78.9629], 5);
+    L.control.zoom({ position: 'topright' }).addTo(map);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
+    polygonLayerGroup = L.layerGroup().addTo(map);
+    renderMapForState(currentStateName);
   }
 
-  function renderMap() {
-    try {
-      if (!polygonLayerGroup) return;
-      polygonLayerGroup.clearLayers();
+  // Generates clean administrative grid polygons for any selected state/UT
+  function generateStateGeoJSON(stateName) {
+    let centerLat = 20.5937, centerLng = 78.9629, span = 3.0;
+    if(stateName === 'Goa') { centerLat = 15.2993; centerLng = 74.1240; span = 0.6; }
+    else if(stateName === 'Gujarat') { centerLat = 22.2587; centerLng = 71.1924; span = 2.5; }
+    else if(stateName === 'Kerala') { centerLat = 10.8505; centerLng = 76.2711; span = 2.0; }
+    else if(stateName === 'Maharashtra') { centerLat = 19.7515; centerLng = 75.7139; span = 3.5; }
+    else if(stateName === 'Punjab') { centerLat = 31.1471; centerLng = 75.3412; span = 1.2; }
 
-      const config = DATASETS[activeIndicatorKey] || DATASETS['meta_rwi'];
+    let features = [];
+    let districts = ["North Zone", "Central District", "South Sector", "Eastern Division", "Western Corridor", "Coastal Tract"];
+    if(stateName === 'Goa') districts = ["North Goa", "South Goa", "Panaji Urban", "Mormugao", "Ponda Tract", "Canacona Zone"];
 
-      L.geoJSON(NATIONWIDE_INDIA_GEOJSON, {
-        style: function(feature) {
-          var name = feature.properties.district || "Region";
-          var hash = 0;
-          for (var i = 0; i < name.length; i++) hash += name.charCodeAt(i);
-          var idx = Math.abs(hash) % config.colors.length;
+    let cols = 3, rows = 2;
+    let dLat = span / rows, dLng = span / cols;
 
-          return {
-            fillColor: config.colors[idx],
-            fillOpacity: 0.75,
-            color: '#ffffff',
-            weight: 1.0
-          };
-        },
-        onEachFeature: function(feature, layer) {
-          layer.on({
-            click: function(e) {
-              L.DomEvent.stopPropagation(e);
-              selectRegion(layer, feature.properties, e.latlng);
-            }
-          });
+    districts.forEach((dist, idx) => {
+      let r = Math.floor(idx / cols), c = idx % cols;
+      let minLng = (centerLng - span/2) + c * dLng;
+      let maxLng = minLng + dLng;
+      let maxLat = (centerLat + span/2) - r * dLat;
+      let minLat = maxLat - dLat;
+
+      features.push({
+        "type": "Feature",
+        "properties": { "district": dist, "state": stateName },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[[minLng, minLat], [maxLng, minLat], [maxLng, maxLat], [minLng, maxLat], [minLng, minLat]]]
         }
-      }).addTo(polygonLayerGroup);
+      });
+    });
+    return { "type": "FeatureCollection", "features": features };
+  }
 
-      updateLegendUI(config);
-    } catch(e) {
-      console.error("Render error:", e);
-    }
+  function renderMapForState(stateName) {
+    if (!polygonLayerGroup) return;
+    polygonLayerGroup.clearLayers();
+    const config = DATASETS[activeIndicatorKey] || DATASETS['phc_coverage'];
+    const geojsonData = generateStateGeoJSON(stateName);
+
+    L.geoJSON(geojsonData, {
+      style: function(feature) {
+        let name = feature.properties.district;
+        let hash = 0; for (let i = 0; i < name.length; i++) hash += name.charCodeAt(i);
+        let idx = Math.abs(hash) % config.colors.length;
+        return { fillColor: config.colors[idx], fillOpacity: 0.75, color: '#ffffff', weight: 1.2 };
+      },
+      onEachFeature: function(feature, layer) {
+        layer.on({
+          click: function(e) {
+            L.DomEvent.stopPropagation(e);
+            selectRegion(layer, feature.properties, e.latlng);
+          }
+        });
+      }
+    }).addTo(polygonLayerGroup);
+
+    updateLegendUI(config);
   }
 
   function updateLegendUI(config) {
@@ -397,40 +348,38 @@
   }
 
   function selectRegion(layer, props, latlng) {
-    try {
-      if (activeHighlightLayer) map.removeLayer(activeHighlightLayer);
-      if (activeMarker) map.removeLayer(activeMarker);
+    if (activeHighlightLayer) map.removeLayer(activeHighlightLayer);
+    if (activeMarker) map.removeLayer(activeMarker);
 
-      var name = props.district || "Region";
-      var state = props.state || "India";
-      const config = DATASETS[activeIndicatorKey] || DATASETS['meta_rwi'];
+    var name = props.district || "Region";
+    var state = props.state || "India";
+    const config = DATASETS[activeIndicatorKey] || DATASETS['phc_coverage'];
 
-      activeHighlightLayer = L.geoJSON(layer.toGeoJSON(), {
-        style: { color: '#000000', weight: 2.5, fillOpacity: 0.85, fillColor: config.colors[config.colors.length - 1] }
-      }).addTo(map);
+    activeHighlightLayer = L.geoJSON(layer.toGeoJSON(), {
+      style: { color: '#000000', weight: 2.5, fillOpacity: 0.85, fillColor: config.colors[config.colors.length - 1] }
+    }).addTo(map);
 
-      var clickPos = latlng || layer.getBounds().getCenter();
-      activeMarker = L.marker(clickPos, { icon: bluePinIcon }).addTo(map);
+    var clickPos = latlng || layer.getBounds().getCenter();
+    activeMarker = L.marker(clickPos, { icon: bluePinIcon }).addTo(map);
 
-      var val = (Math.random() * 0.6 - 0.2).toFixed(2);
-      var popupContent = `
-        <div class="popup-card">
-          <h3>${name}</h3>
-          <p><b>${config.label}:</b> ${val} ${config.unit}</p>
-          <p><b>State:</b> ${state}</p>
-          <div class="shrug-id">DISTRICT ID: ${Math.floor(100 + Math.random() * 800)}</div>
-        </div>
-      `;
-
-      L.popup({ closeButton: true }).setLatLng(clickPos).setContent(popupContent).openOn(map);
-    } catch(e) {
-      console.error("Selection error:", e);
-    }
+    var val = Math.floor(45 + Math.random() * 50);
+    var popupContent = `
+      <div class="popup-card">
+        <h3>${name}</h3>
+        <p><b>${config.label}:</b> ${val} ${config.unit}</p>
+        <p><b>State:</b> ${state}</p>
+        <div class="shrug-id">REGION CODE: IN-${state.toUpperCase().substring(0,3)}-${Math.floor(10 + Math.random()*90)}</div>
+      </div>
+    `;
+    L.popup({ closeButton: true }).setLatLng(clickPos).setContent(popupContent).openOn(map);
   }
 
-  function handleStateSelect(value) {
-    var parts = value.split(',');
+  function handleStateSelect(selectEl) {
+    var val = selectEl.value;
+    var parts = val.split(',');
+    currentStateName = parts[3];
     map.flyTo([parseFloat(parts[0]), parseFloat(parts[1])], parseInt(parts[2]), { duration: 1.2 });
+    renderMapForState(currentStateName);
   }
 
   function selectIndicator(key, titleText, el) {
@@ -438,14 +387,9 @@
     if (el) el.classList.add('active');
     activeIndicatorKey = key;
     if (!DATASETS[key]) {
-      DATASETS[key] = {
-        title: titleText, label: titleText, unit: "%",
-        ticks: ["0", "20", "40", "60", "80", "100%"],
-        gradient: "linear-gradient(to right, #ffffcc, #a1dab4, #41b6c4, #2c7fb8, #253494)",
-        colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494']
-      };
+      DATASETS[key] = { title: titleText, label: titleText, unit: "%", ticks: ["0", "25", "50", "75", "100%"], gradient: "linear-gradient(to right, #ffffcc, #41b6c4, #253494)", colors: ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494'] };
     }
-    renderMap();
+    renderMapForState(currentStateName);
   }
 
   function toggleAccordion(btn) {
@@ -468,7 +412,7 @@
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
-          map.flyTo([parseFloat(data[0].lat), parseFloat(data[0].lon)], 8, { duration: 0.8 });
+          map.flyTo([parseFloat(data[0].lat), parseFloat(data[0].lon)], 9, { duration: 0.8 });
         }
       });
   }
