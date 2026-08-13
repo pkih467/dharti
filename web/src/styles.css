@@ -1,0 +1,8 @@
+.app-root{ display:flex; height:100vh; font-family:Inter,Arial,Helvetica,sans-serif;}
+.left-sidebar{ width:320px; background:#f5fbff; border-right:1px solid #d7eefc; overflow:auto; padding:12px;}
+.map-container{ flex:1; position:relative; }
+.search-top input{ width:100%; padding:8px; margin-bottom:8px; border-radius:4px; border:1px solid #cfeafc; }
+.accordion-section{ margin-bottom:8px; }
+.accordion-toggle{ width:100%; text-align:left; background:#e6f4ff; border:none; padding:10px; border-radius:6px; color:#034f84; font-weight:600; }
+.accordion-panel{ padding:8px; background:transparent; }
+.legend-box{ position: absolute; right:12px; bottom:12px; background: rgba(255,255,255,0.95); padding:8px; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.12); }
