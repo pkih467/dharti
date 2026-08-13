@@ -34,5 +34,5 @@
   {"name":"Delhi (NCT)","code_iso":"IN-DL","capital":"New Delhi","admin_level":1,"state_code":"DL","shrid_prefix":"IN-DL"},
   {"name":"Puducherry","code_iso":"IN-PY","capital":"Puducherry","admin_level":1,"state_code":"PY","shrid_prefix":"IN-PY"},
   {"name":"Ladakh","code_iso":"IN-LA","capital":"Leh","admin_level":1,"state_code":"LA","shrid_prefix":"IN-LA"},
-  {"name":"Jammu and Kashmir","code_iso":"IN-JK","capital":"Srinagar (summer), Jammu (winter)","admin_level":1,"state_code":"JK","shrid_prefix":"IN-JK"}
+  {"name":"Jammu and Kashmir","code_iso":"IN-JK","capital":"Srinagar/Jammu","admin_level":1,"state_code":"JK","shrid_prefix":"IN-JK"}
 ]
