@@ -1,0 +1,4 @@
+shrid,year,indicator,value_num,unit,source,source_url
+IN-MH-015,2022,per_capita_consumption,2300,INR/month,MoSPI,https://mospi.gov.in/
+IN-MH-015,2022,rwi,0.37,relative,MetaRWI,https://dataforgood.fb.com/rwi
+IN-MH-015,2022,multidim_poverty_index,0.12,index,NITI,https://niti.gov.in/
