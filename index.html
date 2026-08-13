@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>SHRUG Atlas — Development Data Lab Engine</title>
+  <title>India Atlas</title>
 
   <!-- Leaflet Map Engine -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <!-- FontAwesome -->
+  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
@@ -26,7 +26,7 @@
 
     #app { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
 
-    /* Reactive Header Bar */
+    /* Top Navigation Bar */
     #header {
       height: 48px; background: var(--nav-bg); color: #fff; display: flex; align-items: center;
       justify-content: space-between; padding: 0 16px; z-index: 3000; flex-shrink: 0;
@@ -34,7 +34,7 @@
     .brand { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #fff; text-decoration: none; }
     .brand small { color: #8b949e; font-weight: 400; border-left: 1px solid #444; padding-left: 8px; }
     
-    .nav-controls { display: flex; align-items: center; gap: 12px; font-size: 12px; }
+    .nav-controls { display: flex; align-items: center; gap: 16px; font-size: 12px; }
     .nav-controls select { background: #2b3b45; color: #fff; border: 1px solid #444; padding: 4px 8px; border-radius: 4px; font-size: 12px; outline: none; cursor: pointer; }
 
     #workspace { display: flex; flex: 1; height: calc(100vh - 48px); position: relative; overflow: hidden; }
@@ -57,7 +57,6 @@
     .search-box { padding: 12px; background: #fff; border-bottom: 1px solid var(--border); }
     .search-box input { width: 100%; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; outline: none; background: #f8f9fa; }
 
-    /* Dynamic Data Domain Tree */
     .domain-tree { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
     .domain-group { border-bottom: 1px solid var(--border); }
     .domain-title {
@@ -77,7 +76,7 @@
     .indicator-node:hover { background: var(--hover); color: var(--accent); }
     .indicator-node.active { background: #eef7ff; color: var(--accent); font-weight: 700; border-left: 3px solid var(--accent); }
 
-    /* Map Viewport Area */
+    /* Map Viewport */
     #map-view { flex: 1; height: 100%; position: relative; overflow: hidden; }
     #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: #f0f2f5; }
 
@@ -89,16 +88,16 @@
     .spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 8px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* Seamless Popup Card */
+    /* Popup Styling */
     .leaflet-popup-content-wrapper { border-radius: 4px; padding: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.15); border: 1px solid var(--border); }
     .leaflet-popup-content { margin: 0; min-width: 240px; }
     .shrug-card { padding: 12px 14px; font-family: -apple-system, sans-serif; background: #fff; }
-    .shrug-card h4 { margin: 0 0 4px 0; font-size: 14px; font-weight: 700; color: #24292e; text-transform: capitalize; }
+    .shrug-card h4 { margin: 0 0 4px 0; font-size: 15px; font-weight: 800; color: #24292e; }
     .shrug-card .metric-val { font-size: 18px; font-weight: 800; color: var(--accent); margin: 6px 0; }
     .shrug-card p { margin: 2px 0; font-size: 11px; color: #57606a; }
     .shrug-card .shrid-badge { font-family: monospace; font-size: 10px; background: #f0f2f5; padding: 2px 5px; border-radius: 3px; display: inline-block; margin-top: 8px; color: #57606a; font-weight: 600; }
 
-    /* Dynamic Quantile Legend */
+    /* Quantile Legend */
     .shrug-legend {
       position: absolute; bottom: 20px; right: 20px; z-index: 1000;
       background: #fff; padding: 10px 14px; border-radius: 4px; border: 1px solid var(--border);
@@ -115,15 +114,62 @@
   <!-- Top Navigation Bar -->
   <header id="header">
     <a href="#" class="brand">
-      <i class="fa-solid fa-layer-group"></i> SHRUG Atlas Engine <small>Development Data Lab</small>
+      <i class="fa-solid fa-layer-group"></i> India Atlas <small>Development Data Lab</small>
     </a>
     <div class="nav-controls">
-      <span>Geography:</span>
-      <select id="geoLevel" onchange="switchGeography(this.value)">
-        <option value="district" selected>Districts (PC11)</option>
-        <option value="subdistrict">Subdistricts / Talukas</option>
-        <option value="town_village">Towns & Villages</option>
-      </select>
+      <div>
+        <span>State / UT:</span>
+        <select id="stateDropdown" onchange="zoomToState(this.value)">
+          <option value="20.5937,78.9629,5" selected>🇮🇳 All India Overview</option>
+          <optgroup label="── 28 STATES ──">
+            <option value="15.9129,79.7400,7">Andhra Pradesh</option>
+            <option value="28.2180,94.7278,7">Arunachal Pradesh</option>
+            <option value="26.2006,92.9376,7">Assam</option>
+            <option value="25.0961,85.3131,7">Bihar</option>
+            <option value="21.2787,81.8661,7">Chhattisgarh</option>
+            <option value="15.2993,74.1240,9">Goa</option>
+            <option value="22.2587,71.1924,7">Gujarat</option>
+            <option value="29.0588,76.0856,8">Haryana</option>
+            <option value="31.1048,77.1734,8">Himachal Pradesh</option>
+            <option value="23.6102,85.2799,7">Jharkhand</option>
+            <option value="15.3173,75.7139,7">Karnataka</option>
+            <option value="10.8505,76.2711,8">Kerala</option>
+            <option value="22.9734,78.6569,7">Madhya Pradesh</option>
+            <option value="19.7515,75.7139,7">Maharashtra</option>
+            <option value="24.6637,93.9063,8">Manipur</option>
+            <option value="25.4670,91.3662,8">Meghalaya</option>
+            <option value="23.1645,92.9376,8">Mizoram</option>
+            <option value="26.1584,94.5624,8">Nagaland</option>
+            <option value="20.9517,85.0985,7">Odisha</option>
+            <option value="31.1471,75.3412,8">Punjab</option>
+            <option value="27.0238,74.2179,7">Rajasthan</option>
+            <option value="27.5330,88.5122,9">Sikkim</option>
+            <option value="11.1271,78.6569,7">Tamil Nadu</option>
+            <option value="18.1124,79.0193,7">Telangana</option>
+            <option value="23.9408,91.9882,9">Tripura</option>
+            <option value="26.8467,80.9462,7">Uttar Pradesh</option>
+            <option value="30.0668,79.0193,8">Uttarakhand</option>
+            <option value="22.9868,87.8550,7">West Bengal</option>
+          </optgroup>
+          <optgroup label="── 8 UNION TERRITORIES ──">
+            <option value="11.7401,92.6586,7">Andaman and Nicobar Islands</option>
+            <option value="30.7333,76.7794,11">Chandigarh</option>
+            <option value="20.3974,72.8328,10">Dadra and Nagar Haveli and Daman and Diu</option>
+            <option value="28.7041,77.1025,10">Delhi (NCT)</option>
+            <option value="33.7782,76.5762,7">Jammu and Kashmir</option>
+            <option value="34.1526,77.5771,7">Ladakh</option>
+            <option value="10.5667,72.6417,8">Lakshadweep</option>
+            <option value="11.9416,79.8083,10">Puducherry</option>
+          </optgroup>
+        </select>
+      </div>
+      <div>
+        <span>Geography:</span>
+        <select id="geoLevel">
+          <option value="district" selected>Districts (PC11)</option>
+          <option value="subdistrict">Subdistricts / Talukas</option>
+        </select>
+      </div>
     </div>
   </header>
 
@@ -135,44 +181,113 @@
       </div>
 
       <div class="domain-tree">
-        <!-- Domain 1: Consumption -->
+        <!-- 15 SHRUG Domains -->
         <div class="domain-group active">
           <button class="domain-title" onclick="toggleDomain(this)">1. Consumption & Wealth <i class="fa-solid fa-chevron-down"></i></button>
           <div class="domain-items" style="display:flex;">
             <div class="indicator-node active" onclick="loadIndicator('rwi', 'Relative Wealth Index (Meta)', ['#053061', '#2166ac', '#92c5de', '#f4a582', '#b2182b', '#67001f'], this)">Relative Wealth Index</div>
-            <div class="indicator-node" onclick="loadIndicator('mpi', 'Multidimensional Poverty Index', ['#1b7837', '#a6dba0', '#f7f7f7', '#c2a5cf', '#762a83'], this)">MPI Deprivation Score</div>
+            <div class="indicator-node" onclick="loadIndicator('consumption', 'Per Capita Consumption', ['#1b7837', '#a6dba0', '#f7f7f7', '#c2a5cf', '#762a83'], this)">Per Capita Consumption</div>
           </div>
         </div>
 
-        <!-- Domain 2: Elections -->
         <div class="domain-group">
           <button class="domain-title" onclick="toggleDomain(this)">2. Electoral Outcomes <i class="fa-solid fa-chevron-down"></i></button>
           <div class="domain-items">
             <div class="indicator-node" onclick="loadIndicator('turnout', 'General Election Turnout Rate', ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf6d', '#1a9850'], this)">Voter Turnout %</div>
+            <div class="indicator-node" onclick="loadIndicator('incumbent', 'Incumbent Vote Share', ['#2166ac', '#4393c3', '#92c5de', '#f4a582', '#d6604d'], this)">Incumbent Vote Share %</div>
           </div>
         </div>
 
-        <!-- Domain 3: Demographics -->
         <div class="domain-group">
           <button class="domain-title" onclick="toggleDomain(this)">3. Population & Demographics <i class="fa-solid fa-chevron-down"></i></button>
           <div class="domain-items">
             <div class="indicator-node" onclick="loadIndicator('sc_share', 'Scheduled Caste Population Share', ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494'], this)">SC Population Share %</div>
+            <div class="indicator-node" onclick="loadIndicator('st_share', 'Scheduled Tribe Population Share', ['#edf8e9', '#bae4b3', '#74c476', '#31a354', '#006d2c'], this)">ST Population Share %</div>
           </div>
         </div>
 
-        <!-- Domain 4: Public Infrastructure -->
         <div class="domain-group">
           <button class="domain-title" onclick="toggleDomain(this)">4. Infrastructure & Utilities <i class="fa-solid fa-chevron-down"></i></button>
           <div class="domain-items">
-            <div class="indicator-node" onclick="loadIndicator('tap_water', 'Piped Water Access (Census / JJM)', ['#feebe2', '#fcc5c0', '#fa9fb5', '#f768a1', '#ae017e'], this)">Piped Water Access %</div>
+            <div class="indicator-node" onclick="loadIndicator('tap_water', 'Piped Water Access (JJM/Census)', ['#feebe2', '#fcc5c0', '#fa9fb5', '#f768a1', '#ae017e'], this)">Piped Water Access %</div>
+            <div class="indicator-node" onclick="loadIndicator('electricity', 'Village Electrification Rate', ['#ffffb2', '#fecc5c', '#fd8d3c', '#e31a1c', '#800026'], this)">Village Electrification %</div>
           </div>
         </div>
 
-        <!-- Domain 11: Nightlights -->
+        <div class="domain-group">
+          <button class="domain-title" onclick="toggleDomain(this)">5. Agriculture & Irrigation <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="domain-items">
+            <div class="indicator-node" onclick="loadIndicator('irrigation', 'Share of Land Irrigated', ['#edf8fb', '#b2e2e2', '#66c2a4', '#2ca25f', '#006d2c'], this)">Irrigated Land Share %</div>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <button class="domain-title" onclick="toggleDomain(this)">6. Education & Schools <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="domain-items">
+            <div class="indicator-node" onclick="loadIndicator('literacy', 'Literate Share (2011 Census)', ['#f7fcf0', '#ccebc5', '#7bccc4', '#2b8cbe', '#084081'], this)">Literate Share %</div>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <button class="domain-title" onclick="toggleDomain(this)">7. Public Health & Hospitals <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="domain-items">
+            <div class="indicator-node" onclick="loadIndicator('phc_access', 'Primary Health Centre Access', ['#fee391', '#fec44f', '#fe9929', '#d95f0e', '#994000'], this)">PHC Coverage Score</div>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <button class="domain-title" onclick="toggleDomain(this)">8. Banking & Financial Inclusion <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="domain-items">
+            <div class="indicator-node" onclick="loadIndicator('banks', 'Commercial Bank Penetration', ['#f1eef6', '#bdc9e1', '#74a9cf', '#2b8cbe', '#045a8d'], this)">Bank Branch Density</div>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <button class="domain-title" onclick="toggleDomain(this)">9. Employment & Firms <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="domain-items">
+            <div class="indicator-node" onclick="loadIndicator('nonfarm', 'Non-Farm Employment Share', ['#edf8fb', '#b3cde3', '#8c96c6', '#88419d', '#4d004b'], this)">Non-Farm Employment %</div>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <button class="domain-title" onclick="toggleDomain(this)">10. Gender & Affirmative Action <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="domain-items">
+            <div class="indicator-node" onclick="loadIndicator('female_emp', 'Female Employment Share', ['#fde0dd', '#fcc5c0', '#fa9fb5', '#f768a1', '#ae017e'], this)">Female Employment %</div>
+          </div>
+        </div>
+
         <div class="domain-group">
           <button class="domain-title" onclick="toggleDomain(this)">11. Nightlights & Economic Activity <i class="fa-solid fa-chevron-down"></i></button>
           <div class="domain-items">
             <div class="indicator-node" onclick="loadIndicator('viirs', 'VIIRS Nighttime Radiance', ['#000004', '#3b0f70', '#8c2981', '#de4968', '#fe9f6d', '#fcfdbf'], this)">VIIRS Radiance Score</div>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <button class="domain-title" onclick="toggleDomain(this)">12. Roads & Connectivity <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="domain-items">
+            <div class="indicator-node" onclick="loadIndicator('pmgsy', 'PMGSY Paved Road Access', ['#f0f0f0', '#bdbdbd', '#737373', '#252525', '#000000'], this)">Paved Road Access %</div>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <button class="domain-title" onclick="toggleDomain(this)">13. Climate & Environment <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="domain-items">
+            <div class="indicator-node" onclick="loadIndicator('pm25', 'Surface PM2.5 Concentration', ['#ffffcc', '#a1dab4', '#41b6c4', '#2c7fb8', '#253494'], this)">PM2.5 Air Quality Index</div>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <button class="domain-title" onclick="toggleDomain(this)">14. Terrain & Topography <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="domain-items">
+            <div class="indicator-node" onclick="loadIndicator('tri', 'Terrain Ruggedness Index', ['#f7fcb9', '#addd8e', '#31a354', '#006837'], this)">Ruggedness Score</div>
+          </div>
+        </div>
+
+        <div class="domain-group">
+          <button class="domain-title" onclick="toggleDomain(this)">15. Welfare & Public Schemes <i class="fa-solid fa-chevron-down"></i></button>
+          <div class="domain-items">
+            <div class="indicator-node" onclick="loadIndicator('mgnrega', 'MGNREGA Saturation Rate', ['#feedde', '#fdd0a2', '#fdae6b', '#fd8d3c', '#e6550d'], this)">MGNREGA Payout Share</div>
           </div>
         </div>
       </div>
@@ -186,11 +301,11 @@
     <div id="map-view">
       <div id="loader">
         <div class="spinner"></div>
-        <div id="loaderText">Compiling SHRUG Spatial Engine...</div>
+        <div id="loaderText">Compiling India Atlas Engine...</div>
       </div>
       <div id="map"></div>
 
-      <!-- Reactive Legend -->
+      <!-- Legend -->
       <div class="shrug-legend">
         <div id="legendTitle" class="legend-label">Relative Wealth Index</div>
         <div id="legendRamp" class="legend-ramp" style="background: linear-gradient(to right, #053061, #2166ac, #92c5de, #f4a582, #b2182b, #67001f);"></div>
@@ -205,18 +320,16 @@
   let currentGeoLayer = null;
   let activeHighlight = null;
   let activeMarker = null;
+  let cachedGeoJSON = null;
 
-  // Active Data Profile State
   let currentIndicator = {
     key: 'rwi',
     title: 'Relative Wealth Index (Meta)',
     colors: ['#053061', '#2166ac', '#92c5de', '#f4a582', '#b2182b', '#67001f']
   };
-  let currentGeography = 'district';
-  let cachedGeoJSON = null;
 
   function initAtlas() {
-    map = L.map('map', { zoomControl: false, preferCanvas: true }).setView([22.5937, 78.9629], 5);
+    map = L.map('map', { zoomControl: false, preferCanvas: true }).setView([20.5937, 78.9629], 5);
     L.control.zoom({ position: 'topright' }).addTo(map);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       maxZoom: 19, attribution: '&copy; OpenStreetMap & CARTO'
@@ -227,12 +340,7 @@
 
   function fetchBoundaryData() {
     document.getElementById('loader').style.display = 'flex';
-    document.getElementById('loaderText').innerText = `Loading ${currentGeography.toUpperCase()} Data Schema...`;
-
-    // Real boundary topology source
-    const endpoint = 'https://raw.githubusercontent.com/ronakchittora/Python/master/data_india_shapefile_stanford/stanford-sh819zz8121-geojson.json';
-
-    fetch(endpoint)
+    fetch('https://raw.githubusercontent.com/ronakchittora/Python/master/data_india_shapefile_stanford/stanford-sh819zz8121-geojson.json')
       .then(res => res.json())
       .then(data => {
         cachedGeoJSON = data;
@@ -241,7 +349,7 @@
       })
       .catch(err => {
         console.error("Pipeline error:", err);
-        document.getElementById('loaderText').innerText = "Failed to sync SHRUG data pipeline.";
+        document.getElementById('loaderText').innerText = "Failed to sync spatial data pipeline.";
       });
   }
 
@@ -250,15 +358,18 @@
 
     currentGeoLayer = L.geoJSON(cachedGeoJSON, {
       style: function(feature) {
-        let name = feature.properties.NAME_2 || feature.properties.district || "Entity";
-        let hash = 0; for (let i = 0; i < name.length; i++) hash += name.charCodeAt(i);
-        let colorIdx = Math.abs(hash) % currentIndicator.colors.length;
+        let props = feature.properties || {};
+        let uniqueName = props.NAME_2 || props.district || props.dtname || props.DISTRICT || "Region";
         
+        let charSum = 0;
+        for (let i = 0; i < uniqueName.length; i++) charSum += uniqueName.charCodeAt(i);
+        let colorIdx = charSum % currentIndicator.colors.length;
+
         return {
           fillColor: currentIndicator.colors[colorIdx],
-          fillOpacity: 0.72,
+          fillOpacity: 0.75,
           color: '#ffffff',
-          weight: 0.7
+          weight: 0.8
         };
       },
       onEachFeature: function(feature, layer) {
@@ -276,11 +387,10 @@
     if (activeHighlight) map.removeLayer(activeHighlight);
     if (activeMarker) map.removeLayer(activeMarker);
 
-    const entityName = props.NAME_2 || props.district || "Unknown Area";
-    const parentState = props.NAME_1 || props.state || "India";
-    const shridCode = props.ID_2 || props.dtcode || "shrug-99482";
+    const entityName = props.NAME_2 || props.district || props.dtname || props.DISTRICT || "District Area";
+    const parentState = props.NAME_1 || props.state || props.stname || "India";
+    const shridCode = props.ID_2 || props.dtcode || props.DIST_HO || "shrug-99482";
 
-    // Highlight selected geometry seamlessly
     activeHighlight = L.geoJSON(layer.toGeoJSON(), {
       style: { color: '#0969da', weight: 2.5, fillOpacity: 0.85, fillColor: currentIndicator.colors[currentIndicator.colors.length - 1] }
     }).addTo(map);
@@ -288,10 +398,14 @@
     const clickPoint = latlng || layer.getBounds().getCenter();
     activeMarker = L.circleMarker(clickPoint, { radius: 4, color: '#fff', weight: 2, fillColor: '#0969da', fillOpacity: 1 }).addTo(map);
 
-    // Compute dynamic metric value based on active topic
     let simulatedValue = (Math.random() * 2.5 - 0.5).toFixed(2);
-    if(currentIndicator.key === 'sc_share' || currentIndicator.key === 'tap_water') simulatedValue = (Math.random() * 85 + 10).toFixed(1) + '%';
-    if(currentIndicator.key === 'viirs') simulatedValue = (Math.random() * 45).toFixed(2) + ' nW';
+    if(currentIndicator.key.includes('share') || currentIndicator.key.includes('water') || currentIndicator.key.includes('turnout') || currentIndicator.key.includes('literacy') || currentIndicator.key.includes('irrigation') || currentIndicator.key.includes('nonfarm') || currentIndicator.key.includes('female')) {
+      simulatedValue = (Math.random() * 85 + 10).toFixed(1) + '%';
+    } else if(currentIndicator.key === 'viirs') {
+      simulatedValue = (Math.random() * 45).toFixed(2) + ' nW';
+    } else if(currentIndicator.key === 'pm25') {
+      simulatedValue = (Math.random() * 90 + 20).toFixed(1) + ' µg/m³';
+    }
 
     const cardHTML = `
       <div class="shrug-card">
@@ -312,17 +426,15 @@
 
     currentIndicator = { key: key, title: titleText, colors: colorArray };
     
-    // Dynamically update legend UI components
     document.getElementById('legendTitle').innerText = titleText;
     document.getElementById('legendRamp').style.background = `linear-gradient(to right, ${colorArray.join(', ')})`;
 
-    // Re-render map geometry reactively without reloading raw data
     if(cachedGeoJSON) renderSpatialLayers();
   }
 
-  function switchGeography(geoLevel) {
-    currentGeography = geoLevel;
-    fetchBoundaryData();
+  function zoomToState(val) {
+    const parts = val.split(',');
+    map.flyTo([parseFloat(parts[0]), parseFloat(parts[1])], parseInt(parts[2]), { duration: 1.2 });
   }
 
   function toggleDomain(btn) {
